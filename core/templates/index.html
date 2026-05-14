@@ -1,398 +1,287 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Rays Power Infra | Land Acquisition Operations Platform (SOP Digitalization)</title>
-     
-    <link rel="icon" href="{% static 'images/rays_logo.png' %}">
-    <link href="https://api.fontshare.com/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-    <link href="{% static 'vendors/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
-    <link href="{% static 'vendors/bootstrap-icons/font/bootstrap-icons.min.css' %}" rel="stylesheet">
-    <link href="{% static 'vendors/glightbox/glightbox.min.css' %}" rel="stylesheet">
-    <link href="{% static 'vendors/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
-    <link href="{% static 'vendors/aos/aos.css' %}" rel="stylesheet">
-    <link href="{% static 'css/onepage.css' %}" rel="stylesheet">
-    <script>
-      (function() {
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rays Power Infra | Land Acquisition Operations Platform (SOP Digitalization)</title>
+
+  <link rel="icon" href="{% static 'images/rays_logo.png' %}">
+  <link href="https://api.fontshare.com/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+    rel="stylesheet">
+  <link href="{% static 'vendors/bootstrap/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendors/bootstrap-icons/font/bootstrap-icons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendors/glightbox/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendors/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendors/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'css/onepage.css' %}" rel="stylesheet">
+  <script>
+    (function () {
       const storedTheme = localStorage.getItem('theme') || 'light';
       document.documentElement.setAttribute('data-bs-theme', storedTheme);
-      })();
-    </script>
+    })();
+  </script>
 </head>
-  <body>
-    
-    <div class="site-wrap">
-      
-      <header class="fbs__net-navbar navbar navbar-expand-lg" aria-label="freebootstrap.net navbar">
-        <div class="container d-flex align-items-center justify-content-between">
-          
-          <a class="navbar-brand w-auto" href="index.html">
-            <img class="logo dark img-fluid" src="{% static 'images/rays_logo.png' %}" alt="Rays Power Infra" style="margin-top: 5px; max-height: 50px; width: auto;"> 
-            <img class="logo light img-fluid" src="{% static 'images/rays_logo.png' %}" alt="Rays Power Infra" style="margin-top: 5px; max-height: 50px; width: auto;">
-          </a>
-          <div class="offcanvas offcanvas-start w-75" id="fbs__net-navbars" tabindex="-1" aria-labelledby="fbs__net-navbarsLabel">
-            <div class="offcanvas-header">
-              <div class="offcanvas-header-logo">
-                <a class="logo-link" id="fbs__net-navbarsLabel" href="index.html">
-                  <img class="logo dark img-fluid" src="{% static 'images/logo-dark.svg' %}" alt="Rays Power Infra"> 
-                  <img class="logo light img-fluid" src="{% static 'images/logo-light.svg' %}" alt="Rays Power Infra">
-                </a>
-              </div>
-              <button class="btn-close btn-close-black" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            
-            <div class="offcanvas-body align-items-center">
-              <ul class="navbar-nav nav mx-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link scroll-link active" href="#home">Dashboard</a></li>
-                <li class="nav-item"><a class="nav-link scroll-link" href="#about">SOP Workflow</a></li>
-                <li class="nav-item"><a class="nav-link scroll-link" href="#portfolio">Project Sites</a></li>
-                <li class="nav-item"><a class="nav-link scroll-link" href="#team">Site Teams</a></li>
-                <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Land Resources <i class="bi bi-chevron-down"></i></a>
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Rajasthan DLC Rates</a></li>
-                  </ul>
-                </li>
-                <li class="nav-item"><a class="nav-link scroll-link" href="#contact">Escalation</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="ms-auto w-auto">
-            <div class="header-social d-flex align-items-center gap-1"><a href="#"><i class="bi bi-twitter-x"></i></a><a href="#"><i class="bi bi-youtube"></i></a><a href="#"><i class="bi bi-facebook"></i></a>
-              <button class="fbs__net-navbar-toggler justify-content-center align-items-center ms-auto" data-bs-toggle="offcanvas" data-bs-target="#fbs__net-navbars" aria-controls="fbs__net-navbars" aria-label="Toggle navigation" aria-expanded="false">
-                  <svg class="fbs__net-icon-menu" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="21" x2="3" y1="6" y2="6"></line>
-                    <line x1="15" x2="3" y1="12" y2="12"></line>
-                    <line x1="17" x2="3" y1="18" y2="18"></line>
-                  </svg>
-                  <svg class="fbs__net-icon-close" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M18 6 6 18"></path>
-                    <path d="m6 6 12 12"></path>
-                  </svg>
-                </button>
-                
-            </div>
-          </div>
-        </div>
-      </header>
 
-      <main>
-        <section class="hero__v1-b section d-flex align-items-center" id="home" style="background-image: url('{% static 'images/hero-bg-2-min.jpg' %}')" data-aos="fade-in">
-          <div class="container"> 
-            <div class="row">
-              <h1 class="hero-title text-white mb-5 pt-5" data-aos="fade-up"><span>Certainty in </span><span>Every Acre: Land </span><span>Acquisition SOP</span></h1>
-              <div class="d-flex align-items-center gap-4 cta-btns" data-aos="fade-up" data-aos-delay="100">
-                <a class="btn btn-light btn-white hover-outline" href="#">Access Tracker</a>
-                <a class="glightbox play-btn d-inline-flex align-items-center gap-2" href="https://www.youtube.com/watch?v=DQx96G4yHd8"><i class="bi bi-play-fill"></i> Watch Platform Demo</a>
-              </div>
-            </div>
-          </div>
-        </section>
+<body>
 
-        <div class="hero__v1-img-wrap">
-          <div class="container">
-            <div class="row g-3">
-              <div class="col-md-6" data-aos="fade-up"><a href="#"> <img class="object-fit-cover w-100 img rounded-5 img-fluid" src="{% static 'images/img-3-min.jpg' %}" alt="Site Surveying"></a></div>
-              <div class="col-md-3" data-aos="fade-up" data-aos-delay="100"><a href="#"> <img class="object-fit-cover w-100 img rounded-5 img-fluid" src="{% static 'images/img-4-min.jpg' %}" alt="Land Documentation"></a></div>
-              <div class="col-md-3" data-aos="fade-up" data-aos-delay="200"><a href="#"> <img class="object-fit-cover w-100 img rounded-5 img-fluid" src="{% static 'images/img-5-min.jpg' %}" alt="Verification"></a></div>
-            </div>
-          </div>
-        </div>
+  <div class="site-wrap">
 
-        <div class="section stats__v8 pt-md-0 pb-0">
-          <div class="container">
-            <div class="row pt-md-5 g-4">
-              <div class="col-6 col-sm-6 col-md-3 col-lg-2 stats-item text-center" data-aos="fade-up">
-                <h2 class="fs-3 fw-bold"><span class="purecounter" data-purecounter-start="0" data-purecounter-end="11" data-purecounter-duration="2">0</span></h2>
-                <p>SOP Steps</p>
-              </div>
-              <div class="col-6 col-sm-6 col-md-3 col-lg-2 stats-item text-center" data-aos="fade-up" data-aos-delay="100">
-                <h2 class="fs-3 fw-bold"><span class="purecounter" data-purecounter-start="0" data-purecounter-end="28" data-purecounter-duration="2">0</span></h2>
-                <p>Doc Checkpoints</p>
-              </div>
-              <div class="col-6 col-sm-6 col-md-3 col-lg-2 stats-item text-center" data-aos="fade-up" data-aos-delay="200">
-                <h2 class="fs-3 fw-bold"><span class="purecounter" data-purecounter-start="0" data-purecounter-end="377" data-purecounter-duration="2">0</span></h2>
-                <p>Days to Handover</p>
-              </div>
-              <div class="col-6 col-sm-6 col-md-3 col-lg-2 stats-item text-center" data-aos="fade-up" data-aos-delay="300">
-                <h2 class="fs-3 fw-bold"><span class="purecounter" data-purecounter-start="0" data-purecounter-end="233" data-purecounter-duration="2">0</span></h2>
-                <p>Surveys Tracked</p>
-              </div>
-              <div class="col-6 col-sm-6 col-md-3 col-lg-2 stats-item text-center" data-aos="fade-up" data-aos-delay="400">
-                <h2 class="fs-3 fw-bold"><span class="purecounter" data-purecounter-start="0" data-purecounter-end="100" data-purecounter-duration="2">0</span><span>%</span></h2>
-                <p>Audit Trail</p>
-              </div>
-              <div class="col-6 col-sm-6 col-md-3 col-lg-2 stats-item text-center" data-aos="fade-up" data-aos-delay="500">
-                <h2 class="fs-3 fw-bold"><span class="purecounter" data-purecounter-start="0" data-purecounter-end="3" data-purecounter-duration="2">0</span></h2>
-                <p>Escalation Levels</p>
-              </div>
-            </div>
-          </div>
-        </div>
+    <header class="fbs__net-navbar navbar navbar-expand-lg" aria-label="freebootstrap.net navbar">
+      <div class="container d-flex align-items-center justify-content-between">
 
-        <div class="section services__v8">
-          <div class="container">
-            <div class="row g-2">
-              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
-                <div class="service-item h-100 rounded-4 p-4">
-                  <div class="icon mb-4"><i class="bi bi-diagram-3 fs-1 text-primary"></i></div>
-                  <h3 class="h6 mb-3 fw-semibold">Dynamic SOP Tracker</h3>
-                  <p>Real-time stage board for all projects (Yelburga, Honnati, etc.) tracking the 11-step acquisition lifecycle per survey number.</p>
-                </div>
-              </div>
-              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                <div class="service-item h-100 rounded-4 p-4">
-                  <div class="icon mb-4"><i class="bi bi-shield-check fs-1 text-primary"></i></div>
-                  <h3 class="h6 mb-3 fw-semibold">Approval Engine</h3>
-                  <p>Configurable approval chains for Stage Deviation Requests. Ensures no step is skipped without HOD/Director authorization.</p>
-                </div>
-              </div>
-              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
-                <div class="service-item h-100 rounded-4 p-4">
-                  <div class="icon mb-4"><i class="bi bi-file-earmark-medical fs-1 text-primary"></i></div>
-                  <h3 class="h6 mb-3 fw-semibold">AI Document Manager</h3>
-                  <p>Automated completeness checks for 28 mandatory documents including RTC, EC, and Mutation records.</p>
-                </div>
-              </div>
-              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-aos="fade-up">
-                <div class="service-item h-100 p-4 rounded-4">
-                  <div class="icon mb-4"><i class="bi bi-speedometer2 fs-1 text-primary"></i></div>
-                  <h3 class="h6 mb-3 fw-semibold">MIS Auto-Reporting</h3>
-                  <p>Instantly generates weekly reports on Target vs. Actual progress, NOC status, and survey-level bottlenecks.</p>
-                </div>
-              </div>
-              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
-                <div class="service-item h-100 p-4 rounded-4">
-                  <div class="icon mb-4"><i class="bi bi-calculator fs-1 text-primary"></i></div>
-                  <h3 class="h6 mb-3 fw-semibold">Statutory Calculator</h3>
-                  <p>Automated computation of Stamp Duty and Registration fees tailored for Rajasthan and Karnataka state laws.</p>
-                </div>
-              </div>
-              <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
-                <div class="service-item h-100 p-4 rounded-4">
-                  <div class="icon mb-4"><i class="bi bi-credit-card-check fs-1 text-primary"></i></div>
-                  <h3 class="h6 mb-3 fw-semibold">Billing Milestone Trigger</h3>
-                  <p>Automated alerts to Finance for milestone-based invoicing as land parcels reach ATL, POA, or Lease Deed stages.</p>
-                </div>
-              </div>
+        <a class="navbar-brand w-auto" href="index.html">
+          <img class="logo dark img-fluid" src="{% static 'images/rays_logo.png' %}" alt="Rays Power Infra"
+            style="margin-top: 5px; max-height: 50px; width: auto;">
+          <img class="logo light img-fluid" src="{% static 'images/rays_logo.png' %}" alt="Rays Power Infra"
+            style="margin-top: 5px; max-height: 50px; width: auto;">
+        </a>
+        <div class="offcanvas offcanvas-start w-75" id="fbs__net-navbars" tabindex="-1"
+          aria-labelledby="fbs__net-navbarsLabel">
+          <div class="offcanvas-header">
+            <div class="offcanvas-header-logo">
+              <a class="logo-link" id="fbs__net-navbarsLabel" href="index.html">
+                <img class="logo dark img-fluid" src="{% static 'images/logo-dark.svg' %}" alt="Rays Power Infra">
+                <img class="logo light img-fluid" src="{% static 'images/logo-light.svg' %}" alt="Rays Power Infra">
+              </a>
             </div>
+            <button class="btn-close btn-close-black" type="button" data-bs-dismiss="offcanvas"
+              aria-label="Close"></button>
           </div>
-        </div>
 
-        <div class="section about__v10" id="about">
-          <div class="container">
-            <div class="row align-items-center">
-              <div class="col-md-6 mb-5 mb-md-0" data-aos="fade-up">
-                <a class="d-block position-relative glightbox play" href="https://www.youtube.com/watch?v=DQx96G4yHd8">
-                  <span class="d-flex align-items-center rounded-circle justify-content-center position-absolute"><i class="bi bi-play-fill"></i></span>
-                  <img class="img-fluid rounded-5" src="{% static 'images/img-1-min.jpg' %}" alt="Rays Power Site Activity">
-                </a>
-              </div>
-              <div class="col-md-6" data-aos="fade-up" data-aos-delay="100"> 
-                <div class="row justify-content-end">
-                  <div class="col-md-11">
-                    <h2 class="fs-4 fw-bold mb-3">Our 11-Step Acquisition SOP</h2>
-                    <p>We follow a rigid timeline-based process to ensure bankable land titles for solar SPVs.</p>
-                    <ul class="list-unstyled d-flex flex-column features mt-4 gap-4">
-                      <li class="d-flex w-100 gap-4">
-                        <div class="icon text-primary"><i class="bi bi-1-circle fs-2"></i></div>
-                        <div>
-                          <h3 class="fs-6 fw-bold">Phase I: Identification & MOU</h3>
-                          <p>From T+0 to T+18 days, land is finalized and basic MOUs are executed.</p>
-                        </div>
+          <div class="offcanvas-body align-items-center">
+            <ul class="navbar-nav nav mx-auto mb-2 mb-lg-0">
+              <li class="nav-item"><a class="nav-link scroll-link active" href="#home">Dashboard</a></li>
+              <li class="nav-item"><a class="nav-link scroll-link" href="#about">SOP Workflow</a></li>
+              <li class="nav-item"><a class="nav-link scroll-link" href="#portfolio">Project Sites</a></li>
+              <li class="nav-item"><a class="nav-link scroll-link" href="#team">Site Teams</a></li>
+              <li class="nav-item"><a class="nav-link scroll-link" href="#contact">Escalation</a></li>
+               <br><br>
+              <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#"
+                  data-bs-toggle="dropdown">Account <i class="bi bi-chevron-down"></i></a>
+                <ul class="dropdown-menu">
+                  {% if user.is_authenticated %}
+                      <li>
+                        <a class="dropdown-item" href="{% url 'logout' %}">
+                          Logout
+                        </a>
                       </li>
-                      <li class="d-flex w-100 gap-4">
-                        <div class="icon text-primary"><i class="bi bi-2-circle fs-2"></i></div>
-                        <div>
-                          <h3 class="fs-6 fw-bold">Phase II: Legal Due Diligence</h3>
-                          <p>Document collection leads to the Prima Facie TSR, completed by T+68 days.</p>
-                        </div>
+                      <li>
+                        <a class="dropdown-item" href="#">
+                          My Profile
+                        </a>
                       </li>
-                      <li class="d-flex w-100 gap-4">
-                        <div class="icon text-primary"><i class="bi bi-3-circle fs-2"></i></div>
-                        <div>
-                          <h3 class="fs-6 fw-bold">Phase III: Lease & Possession</h3>
-                          <p>ATL/GPA execution followed by stone marking and physical possession at T+135 days.</p>
-                        </div>
+                      {% else %}
+                      <li>
+                        <a class="dropdown-item" href="{% url 'login' %}">
+                          Login
+                        </a>
                       </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
+                  {% endif %}
+                </ul>
+              </li>
+            </ul>
           </div>
         </div>
+        <div class="ms-auto w-auto">
+          <div class="header-social d-flex align-items-center gap-1"><a href="#"><i class="bi bi-twitter-x"></i></a><a
+              href="#"><i class="bi bi-youtube"></i></a><a href="#"><i class="bi bi-facebook"></i></a>
+            <button class="fbs__net-navbar-toggler justify-content-center align-items-center ms-auto"
+              data-bs-toggle="offcanvas" data-bs-target="#fbs__net-navbars" aria-controls="fbs__net-navbars"
+              aria-label="Toggle navigation" aria-expanded="false">
+              <svg class="fbs__net-icon-menu" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <line x1="21" x2="3" y1="6" y2="6"></line>
+                <line x1="15" x2="3" y1="12" y2="12"></line>
+                <line x1="17" x2="3" y1="18" y2="18"></line>
+              </svg>
+              <svg class="fbs__net-icon-close" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+              </svg>
+            </button>
 
-        <div class="section portfolio__v6" id="portfolio">
-          <div class="container">
-            <div class="row mb-4" data-aos="fade-up">
-              <div class="col-md-6 mx-auto text-center">
-                <h2 class="fw-bold fs-4 mb-4">Active Projects Dashboard</h2>
-                <p>Tracking land acquisition progress across major utility-scale projects in Karnataka and Rajasthan.</p>
-              </div>
-            </div>
-            <div class="row g-3">
-              <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
-                <a class="portfolio-item rounded-5 overflow-hidden d-block position-relative" href="#">
-                  <img class="img-fluid object-fit-cover" src="{% static 'images/img-1-min.jpg' %}" alt="Yelburga Solar">
-                  <div class="project-info rounded-5 text-center">
-                    <span class="type">Client: Radiance</span>
-                    <h3 class="title mb-0">Yelburga (Chikoppa) Project</h3>
-                    <span class="location">180 Acres | ₹3.75 Cr</span>
-                  </div>
-                </a>
-              </div>
-              <div class="col-md-4" data-aos="fade-up" data-aos-delay="200"> 
-                <a class="portfolio-item rounded-5 overflow-hidden d-block position-relative" href="#">
-                  <img class="img-fluid object-fit-cover" src="{% static 'images/img-2-min.jpg' %}" alt="Kankagiri Project">
-                  <div class="project-info rounded-5 text-center">
-                    <span class="type">Client: Blupine/AMPIN</span>
-                    <h3 class="title mb-0">Kankagiri Solar Park</h3>
-                    <span class="location">SOP Phase: NOC Tracking</span>
-                  </div>
-                </a>
-              </div>
-              <div class="col-md-4" data-aos="fade-up" data-aos-delay="300"> 
-                <a class="portfolio-item rounded-5 overflow-hidden d-block position-relative" href="#">
-                  <img class="img-fluid object-fit-cover" src="{% static 'images/img-3-min.jpg' %}" alt="Bellary Solar">
-                  <div class="project-info rounded-5 text-center">
-                    <span class="type">Client: Radiance</span>
-                    <h3 class="title mb-0">Bellary Solar Layout</h3>
-                    <span class="location">SOP Phase: Lease Deed</span>
-                  </div>
-                </a>
-              </div>
-              <div class="col-md-6" data-aos="fade-up" data-aos-delay="400">
-                <a class="portfolio-item rounded-5 overflow-hidden d-block position-relative" href="#">
-                  <img class="img-fluid object-fit-cover" src="{% static 'images/img-4-min.jpg' %}" alt="Jawalgiri Site">
-                  <div class="project-info rounded-5 text-center">
-                    <span class="type">EPC Operations</span>
-                    <h3 class="title mb-0">Jawalgiri Site Possession</h3>
-                    <span class="location">Audit Status: Green</span>
-                  </div>
-                </a>
-              </div>
-              <div class="col-md-6" data-aos="fade-up" data-aos-delay="500">
-                <a class="portfolio-item rounded-5 overflow-hidden d-block position-relative" href="#">
-                  <img class="img-fluid object-fit-cover" src="{% static 'images/img-5-min.jpg' %}" alt="Honnati Site">
-                  <div class="project-info rounded-5 text-center">
-                    <span class="type">Client SPOC Verified</span>
-                    <h3 class="title mb-0">Honnati Land Clearing</h3>
-                    <span class="location">SOP Phase: NA Order</span>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="section solar-calc" id="solar-calc" data-aos="fade-up">
-          <div class="container">
-            <div class="row">
-              <div class="col-md-12 mx-auto">
-                <div class="solar-calc-inner p-5 rounded-5">
-                  <div class="calc">
-                    <h3 class="fs-4 fw-bold mb-4">Statutory Duty Calculator (Beta)</h3>
-                    <p class="text-muted">Computes Stamp Duty and Registration fees based on DLC/Circle Rates.</p>
-                    <div class="d-inline-flex flex-column flex-md-row gap-4 flex-wrap align-items-end mb-4">
-                      <label>State Jurisdiction: 
-                        <select class="form-control mt-3"><option>Rajasthan</option><option>Karnataka</option></select>
-                      </label>
-                      <label>Lease Value / Circle Rate (₹): 
-                        <input class="form-control mt-3" id="monthlyBill" type="number">
-                      </label>
-                      <button class="calculate-btn btn btn-primary">Estimate Fees</button>
-                    </div>
-                    <div id="results"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </main>
-
-      <div class="section team__v4" id="team">
-        <div class="container">
-          <div class="row mb-5">
-            <div class="col-md-7 mx-auto text-center" data-aos="fade-up">
-              <h2 class="fw-bold fs-4 mb-3">Escalation Matrix</h2>
-              <p>Direct communication lines between Site Teams, Head Office, and Clients.</p>
-            </div>
-          </div>
-          <div class="row g-4">
-            <div class="col-md-6 col-lg-3" data-aos="fade-up">
-              <div class="card-item text-center rounded-5 pb-5 overflow-hidden">
-                <div class="img mb-5 px-5 pt-4"><img class="img-fluid rounded-circle" src="{% static 'images/person-sq-1-min.jpg' %}" alt="Pawan Sharma"></div>
-                <div class="info px-5 pt-5 mb-4">
-                  <h3 class="fs-5 mb-0">Pawan Sharma</h3><span class="title">Internal Escalation L3</span>
-                </div>
-                <div class="social px-2 d-inline-flex gap-2"><a href="#"><i class="bi bi-envelope"></i></a><a href="#"><i class="bi bi-telephone"></i></a></div>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
-              <div class="card-item text-center rounded-5 pb-5 overflow-hidden">
-                <div class="img mb-5 px-5 pt-4"><img class="img-fluid rounded-circle" src="{% static 'images/person-sq-2-min.jpg' %}" alt="Jitendra Mishra"></div>
-                <div class="info px-5 pt-5 mb-4">
-                  <h3 class="fs-5 mb-0">Jitendra Mishra</h3><span class="title">Internal Escalation L2</span>
-                </div>
-                <div class="social px-2 d-inline-flex gap-2"><a href="#"><i class="bi bi-envelope"></i></a><a href="#"><i class="bi bi-telephone"></i></a></div>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
-              <div class="card-item text-center rounded-5 pb-5 overflow-hidden">
-                <div class="img mb-5 px-5 pt-4"><img class="img-fluid rounded-circle" src="{% static 'images/person-sq-3-min.jpg' %}" alt="Ritik Sharma"></div>
-                <div class="info px-5 pt-5 mb-4">
-                  <h3 class="fs-5 mb-0">Ritik Sharma</h3><span class="title">Internal Escalation L1</span>
-                </div>
-                <div class="social px-2 d-inline-flex gap-2"><a href="#"><i class="bi bi-envelope"></i></a><a href="#"><i class="bi bi-telephone"></i></a></div>
-              </div>
-            </div>
-            <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
-              <div class="card-item text-center rounded-5 pb-5 overflow-hidden">
-                <div class="img mb-5 px-5 pt-4"><img class="img-fluid rounded-circle" src="{% static 'images/person-sq-4-min.jpg' %}" alt="Accounts Team"></div>
-                <div class="info px-5 pt-5 mb-4">
-                  <h3 class="fs-5 mb-0">Finance/Admin</h3><span class="title">Aggregator Payments</span>
-                </div>
-                <div class="social px-2 d-inline-flex gap-2"><a href="#"><i class="bi bi-envelope"></i></a><a href="#"><i class="bi bi-telephone"></i></a></div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
+    </header>
 
-      <div class="section faq__v3" id="faq">
-        <div class="container" data-aos="fade-up">
+    <main>
+      <section class="hero__v1-b section d-flex align-items-center" id="home"
+        style="background-image: url('{% static 'images/hero-bg-2-min.jpg' %}')" data-aos="fade-in">
+        <div class="container">
           <div class="row">
-            <div class="col-lg-5 mx-auto text-center">
-              <h2 class="fs-4 fw-bold mb-3">Operation FAQ</h2>
-              <p class="mb-5">Guidelines for using the Rays Power Land Acquisition Platform.</p>
+            <h1 class="hero-title text-white mb-5 pt-5" data-aos="fade-up"><span>Certainty in </span><span>Every Acre:
+                Land </span><span>Acquisition SOP</span></h1>
+            <div class="d-flex align-items-center gap-4 cta-btns" data-aos="fade-up" data-aos-delay="100">
+              <a class="btn btn-light btn-white hover-outline" href="#">Access Tracker</a>
+              <a class="glightbox play-btn d-inline-flex align-items-center gap-2"
+                href="https://www.youtube.com/watch?v=DQx96G4yHd8"><i class="bi bi-play-fill"></i> Watch Platform
+                Demo</a>
             </div>
           </div>
-          <div class="content rounded-4 py-5 px-4">
-            <div class="row">
-              <div class="col-lg-5 mb-5 mb-lg-0">
-                <img class="img-fluid rounded-5" src="{% static 'images/img-3-min.jpg' %}" alt="Operation Support">
+        </div>
+      </section>
+
+      <div class="hero__v1-img-wrap">
+        <div class="container">
+          <div class="row g-3">
+            <div class="col-md-6" data-aos="fade-up"><a href="#"> <img
+                  class="object-fit-cover w-100 img rounded-5 img-fluid" src="{% static 'images/img-3-min.jpg' %}"
+                  alt="Site Surveying"></a></div>
+            <div class="col-md-3" data-aos="fade-up" data-aos-delay="100"><a href="#"> <img
+                  class="object-fit-cover w-100 img rounded-5 img-fluid" src="{% static 'images/img-4-min.jpg' %}"
+                  alt="Land Documentation"></a></div>
+            <div class="col-md-3" data-aos="fade-up" data-aos-delay="200"><a href="#"> <img
+                  class="object-fit-cover w-100 img rounded-5 img-fluid" src="{% static 'images/img-5-min.jpg' %}"
+                  alt="Verification"></a></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section stats__v8 pt-md-0 pb-0">
+        <div class="container">
+          <div class="row pt-md-5 g-4">
+            <div class="col-6 col-sm-6 col-md-3 col-lg-2 stats-item text-center" data-aos="fade-up">
+              <h2 class="fs-3 fw-bold"><span class="purecounter" data-purecounter-start="0" data-purecounter-end="11"
+                  data-purecounter-duration="2">0</span></h2>
+              <p>SOP Steps</p>
+            </div>
+            <div class="col-6 col-sm-6 col-md-3 col-lg-2 stats-item text-center" data-aos="fade-up"
+              data-aos-delay="100">
+              <h2 class="fs-3 fw-bold"><span class="purecounter" data-purecounter-start="0" data-purecounter-end="28"
+                  data-purecounter-duration="2">0</span></h2>
+              <p>Doc Checkpoints</p>
+            </div>
+            <div class="col-6 col-sm-6 col-md-3 col-lg-2 stats-item text-center" data-aos="fade-up"
+              data-aos-delay="200">
+              <h2 class="fs-3 fw-bold"><span class="purecounter" data-purecounter-start="0" data-purecounter-end="377"
+                  data-purecounter-duration="2">0</span></h2>
+              <p>Days to Handover</p>
+            </div>
+            <div class="col-6 col-sm-6 col-md-3 col-lg-2 stats-item text-center" data-aos="fade-up"
+              data-aos-delay="300">
+              <h2 class="fs-3 fw-bold"><span class="purecounter" data-purecounter-start="0" data-purecounter-end="233"
+                  data-purecounter-duration="2">0</span></h2>
+              <p>Surveys Tracked</p>
+            </div>
+            <div class="col-6 col-sm-6 col-md-3 col-lg-2 stats-item text-center" data-aos="fade-up"
+              data-aos-delay="400">
+              <h2 class="fs-3 fw-bold"><span class="purecounter" data-purecounter-start="0" data-purecounter-end="100"
+                  data-purecounter-duration="2">0</span><span>%</span></h2>
+              <p>Audit Trail</p>
+            </div>
+            <div class="col-6 col-sm-6 col-md-3 col-lg-2 stats-item text-center" data-aos="fade-up"
+              data-aos-delay="500">
+              <h2 class="fs-3 fw-bold"><span class="purecounter" data-purecounter-start="0" data-purecounter-end="3"
+                  data-purecounter-duration="2">0</span></h2>
+              <p>Escalation Levels</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section services__v8">
+        <div class="container">
+          <div class="row g-2">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+              <div class="service-item h-100 rounded-4 p-4">
+                <div class="icon mb-4"><i class="bi bi-diagram-3 fs-1 text-primary"></i></div>
+                <h3 class="h6 mb-3 fw-semibold">Dynamic SOP Tracker</h3>
+                <p>Real-time stage board for all projects (Yelburga, Honnati, etc.) tracking the 11-step acquisition
+                  lifecycle per survey number.</p>
               </div>
-              <div class="col-lg-7">
-                <div class="accordion custom-accordion" id="accordionSOP">
-                  <div class="accordion-item">
-                    <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#f1">Can I skip the TSR phase for urgent registration?</button></h2>
-                    <div class="accordion-collapse collapse show" id="f1" data-bs-parent="#accordionSOP">
-                      <div class="accordion-body">No. All stage reorders must be processed through the Approval Engine. A Stage Deviation Request must be raised and approved by the Director level.</div>
-                    </div>
-                  </div>
-                  <div class="accordion-item">
-                    <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#f2">How are missing documents flagged?</button></h2>
-                    <div class="accordion-collapse collapse" id="f2" data-bs-parent="#accordionSOP">
-                      <div class="accordion-body">The AI Document Manager audits each survey number against the 28-column mandatory checklist. Pending items are flagged in Red on the site dashboard.</div>
-                    </div>
-                  </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+              <div class="service-item h-100 rounded-4 p-4">
+                <div class="icon mb-4"><i class="bi bi-shield-check fs-1 text-primary"></i></div>
+                <h3 class="h6 mb-3 fw-semibold">Approval Engine</h3>
+                <p>Configurable approval chains for Stage Deviation Requests. Ensures no step is skipped without
+                  HOD/Director authorization.</p>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+              <div class="service-item h-100 rounded-4 p-4">
+                <div class="icon mb-4"><i class="bi bi-file-earmark-medical fs-1 text-primary"></i></div>
+                <h3 class="h6 mb-3 fw-semibold">AI Document Manager</h3>
+                <p>Automated completeness checks for 28 mandatory documents including RTC, EC, and Mutation records.</p>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-aos="fade-up">
+              <div class="service-item h-100 p-4 rounded-4">
+                <div class="icon mb-4"><i class="bi bi-speedometer2 fs-1 text-primary"></i></div>
+                <h3 class="h6 mb-3 fw-semibold">MIS Auto-Reporting</h3>
+                <p>Instantly generates weekly reports on Target vs. Actual progress, NOC status, and survey-level
+                  bottlenecks.</p>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+              <div class="service-item h-100 p-4 rounded-4">
+                <div class="icon mb-4"><i class="bi bi-calculator fs-1 text-primary"></i></div>
+                <h3 class="h6 mb-3 fw-semibold">Statutory Calculator</h3>
+                <p>Automated computation of Stamp Duty and Registration fees tailored for Rajasthan and Karnataka state
+                  laws.</p>
+              </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+              <div class="service-item h-100 p-4 rounded-4">
+                <div class="icon mb-4"><i class="bi bi-credit-card-check fs-1 text-primary"></i></div>
+                <h3 class="h6 mb-3 fw-semibold">Billing Milestone Trigger</h3>
+                <p>Automated alerts to Finance for milestone-based invoicing as land parcels reach ATL, POA, or Lease
+                  Deed stages.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section about__v10" id="about">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-md-6 mb-5 mb-md-0" data-aos="fade-up">
+              <a class="d-block position-relative glightbox play" href="https://www.youtube.com/watch?v=DQx96G4yHd8">
+                <span class="d-flex align-items-center rounded-circle justify-content-center position-absolute"><i
+                    class="bi bi-play-fill"></i></span>
+                <img class="img-fluid rounded-5" src="{% static 'images/img-1-min.jpg' %}"
+                  alt="Rays Power Site Activity">
+              </a>
+            </div>
+            <div class="col-md-6" data-aos="fade-up" data-aos-delay="100">
+              <div class="row justify-content-end">
+                <div class="col-md-11">
+                  <h2 class="fs-4 fw-bold mb-3">Our 11-Step Acquisition SOP</h2>
+                  <p>We follow a rigid timeline-based process to ensure bankable land titles for solar SPVs.</p>
+                  <ul class="list-unstyled d-flex flex-column features mt-4 gap-4">
+                    <li class="d-flex w-100 gap-4">
+                      <div class="icon text-primary"><i class="bi bi-1-circle fs-2"></i></div>
+                      <div>
+                        <h3 class="fs-6 fw-bold">Phase I: Identification & MOU</h3>
+                        <p>From T+0 to T+18 days, land is finalized and basic MOUs are executed.</p>
+                      </div>
+                    </li>
+                    <li class="d-flex w-100 gap-4">
+                      <div class="icon text-primary"><i class="bi bi-2-circle fs-2"></i></div>
+                      <div>
+                        <h3 class="fs-6 fw-bold">Phase II: Legal Due Diligence</h3>
+                        <p>Document collection leads to the Prima Facie TSR, completed by T+68 days.</p>
+                      </div>
+                    </li>
+                    <li class="d-flex w-100 gap-4">
+                      <div class="icon text-primary"><i class="bi bi-3-circle fs-2"></i></div>
+                      <div>
+                        <h3 class="fs-6 fw-bold">Phase III: Lease & Possession</h3>
+                        <p>ATL/GPA execution followed by stone marking and physical possession at T+135 days.</p>
+                      </div>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -400,90 +289,282 @@
         </div>
       </div>
 
-      <div class="section contact__v5" id="contact">
+      <div class="section portfolio__v6" id="portfolio">
         <div class="container">
-          <div class="row mb-5">
-            <div class="col-12 mb-4" data-aos="fade-up">
-              <h2 class="fs-4 fw-bold">Site Support & Escalation</h2>
+          <div class="row mb-4" data-aos="fade-up">
+            <div class="col-md-6 mx-auto text-center">
+              <h2 class="fw-bold fs-4 mb-4">Active Projects Dashboard</h2>
+              <p>Tracking land acquisition progress across major utility-scale projects in Karnataka and Rajasthan.</p>
             </div>
-            <div class="col-md-6 mb-5 mb-md-0">
-              <div class="d-flex flex-column gap-5">
-                <div class="d-flex align-items-start gap-3" data-aos="fade-up">
-                  <div class="icon d-block"><i class="bi bi-telephone fs-5"></i></div>
-                  <div> <span class="d-block fw-semibold">HO Land Department</span><span>Direct Support Line</span></div>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+              <a class="portfolio-item rounded-5 overflow-hidden d-block position-relative" href="#">
+                <img class="img-fluid object-fit-cover" src="{% static 'images/img-1-min.jpg' %}" alt="Yelburga Solar">
+                <div class="project-info rounded-5 text-center">
+                  <span class="type">Client: Radiance</span>
+                  <h3 class="title mb-0">Yelburga (Chikoppa) Project</h3>
+                  <span class="location">180 Acres | ₹3.75 Cr</span>
                 </div>
-              </div>
+              </a>
             </div>
-            <div class="col-12">
-              <div class="rounded-5 form-wrapper mt-5" data-aos="fade-up">
-                <h4 class="mb-4">Raise SOP Deviation / Issue Ticket</h4>
-                <form id="contactForm">
-                  <div class="row gap-3 mb-3">
-                    <div class="col-md-12">
-                      <label class="mb-2" for="subject">Project Name (e.g., Yelburga, Honnati)</label>
-                      <input class="form-control" id="subject" type="text" required>
-                    </div>
-                    <div class="col-md-12">
-                      <label class="mb-2" for="message">Deviation Reason / Missing Doc Detail</label>
-                      <textarea class="form-control" id="message" rows="5" required></textarea>
-                    </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+              <a class="portfolio-item rounded-5 overflow-hidden d-block position-relative" href="#">
+                <img class="img-fluid object-fit-cover" src="{% static 'images/img-2-min.jpg' %}"
+                  alt="Kankagiri Project">
+                <div class="project-info rounded-5 text-center">
+                  <span class="type">Client: Blupine/AMPIN</span>
+                  <h3 class="title mb-0">Kankagiri Solar Park</h3>
+                  <span class="location">SOP Phase: NOC Tracking</span>
+                </div>
+              </a>
+            </div>
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+              <a class="portfolio-item rounded-5 overflow-hidden d-block position-relative" href="#">
+                <img class="img-fluid object-fit-cover" src="{% static 'images/img-3-min.jpg' %}" alt="Bellary Solar">
+                <div class="project-info rounded-5 text-center">
+                  <span class="type">Client: Radiance</span>
+                  <h3 class="title mb-0">Bellary Solar Layout</h3>
+                  <span class="location">SOP Phase: Lease Deed</span>
+                </div>
+              </a>
+            </div>
+            <div class="col-md-6" data-aos="fade-up" data-aos-delay="400">
+              <a class="portfolio-item rounded-5 overflow-hidden d-block position-relative" href="#">
+                <img class="img-fluid object-fit-cover" src="{% static 'images/img-4-min.jpg' %}" alt="Jawalgiri Site">
+                <div class="project-info rounded-5 text-center">
+                  <span class="type">EPC Operations</span>
+                  <h3 class="title mb-0">Jawalgiri Site Possession</h3>
+                  <span class="location">Audit Status: Green</span>
+                </div>
+              </a>
+            </div>
+            <div class="col-md-6" data-aos="fade-up" data-aos-delay="500">
+              <a class="portfolio-item rounded-5 overflow-hidden d-block position-relative" href="#">
+                <img class="img-fluid object-fit-cover" src="{% static 'images/img-5-min.jpg' %}" alt="Honnati Site">
+                <div class="project-info rounded-5 text-center">
+                  <span class="type">Client SPOC Verified</span>
+                  <h3 class="title mb-0">Honnati Land Clearing</h3>
+                  <span class="location">SOP Phase: NA Order</span>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section solar-calc" id="solar-calc" data-aos="fade-up">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12 mx-auto">
+              <div class="solar-calc-inner p-5 rounded-5">
+                <div class="calc">
+                  <h3 class="fs-4 fw-bold mb-4">Statutory Duty Calculator (Beta)</h3>
+                  <p class="text-muted">Computes Stamp Duty and Registration fees based on DLC/Circle Rates.</p>
+                  <div class="d-inline-flex flex-column flex-md-row gap-4 flex-wrap align-items-end mb-4">
+                    <label>State Jurisdiction:
+                      <select class="form-control mt-3">
+                        <option>Rajasthan</option>
+                        <option>Karnataka</option>
+                      </select>
+                    </label>
+                    <label>Lease Value / Circle Rate (₹):
+                      <input class="form-control mt-3" id="monthlyBill" type="number">
+                    </label>
+                    <button class="calculate-btn btn btn-primary">Estimate Fees</button>
                   </div>
-                  <button class="btn btn-primary w-100 fw-semibold" type="submit">Submit for Approval</button>
-                </form>
+                  <div id="results"></div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <footer class="footer pt-5 pb-5">
-        <div class="container">
-          <div class="row justify-content-between mb-5 g-xl-5">
-            <div class="col-md-4 mb-5 mb-lg-0">
-              <h3 class="mb-3 fw-bold">Rays Power Infra</h3>
-              <p class="mb-4">A comprehensive land acquisition management system covering the full lifecycle from land identification to original document handover.</p>
-            </div>
-            <div class="col-md-7">
-              <div class="row g-2">
-                <div class="col-md-6 col-lg-4 mb-4">
-                  <h3 class="mb-3 fw-bold">Operations</h3>
-                  <ul class="list-unstyled">
-                    <li><a href="#">MIS Dashboard</a></li>
-                    <li><a href="#">SOP Workflow</a></li>
-                    <li><a href="#">NOC Tracker</a></li>
-                  </ul>
-                </div>
-                <div class="col-md-6 col-lg-4">
-                  <h3 class="mb-3 fw-bold">Compliance</h3>
-                  <ul class="list-unstyled">
-                    <li><a href="#">Rajasthan Statutory</a></li>
-                    <li><a href="#">Karnataka Statutory</a></li>
-                    <li><a href="#">Audit Logs</a></li>
-                  </ul>
-                </div>
+    </main>
+
+    <div class="section team__v4" id="team">
+      <div class="container">
+        <div class="row mb-5">
+          <div class="col-md-7 mx-auto text-center" data-aos="fade-up">
+            <h2 class="fw-bold fs-4 mb-3">Escalation Matrix</h2>
+            <p>Direct communication lines between Site Teams, Head Office, and Clients.</p>
+          </div>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-6 col-lg-3" data-aos="fade-up">
+            <div class="card-item text-center rounded-5 pb-5 overflow-hidden">
+              <div class="img mb-5 px-5 pt-4"><img class="img-fluid rounded-circle"
+                  src="{% static 'images/person-sq-1-min.jpg' %}" alt="Pawan Sharma"></div>
+              <div class="info px-5 pt-5 mb-4">
+                <h3 class="fs-5 mb-0">Pawan Sharma</h3><span class="title">Internal Escalation L3</span>
               </div>
+              <div class="social px-2 d-inline-flex gap-2"><a href="#"><i class="bi bi-envelope"></i></a><a href="#"><i
+                    class="bi bi-telephone"></i></a></div>
             </div>
           </div>
-          <div class="row credits pt-3">
-            <div class="col-xl-8 text-center text-xl-start mb-3 mb-xl-0">
-              &copy; <script>document.write(new Date().getFullYear());</script> Rays Power Infra Land Platform. 
+          <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="100">
+            <div class="card-item text-center rounded-5 pb-5 overflow-hidden">
+              <div class="img mb-5 px-5 pt-4"><img class="img-fluid rounded-circle"
+                  src="{% static 'images/person-sq-2-min.jpg' %}" alt="Jitendra Mishra"></div>
+              <div class="info px-5 pt-5 mb-4">
+                <h3 class="fs-5 mb-0">Jitendra Mishra</h3><span class="title">Internal Escalation L2</span>
+              </div>
+              <div class="social px-2 d-inline-flex gap-2"><a href="#"><i class="bi bi-envelope"></i></a><a href="#"><i
+                    class="bi bi-telephone"></i></a></div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="200">
+            <div class="card-item text-center rounded-5 pb-5 overflow-hidden">
+              <div class="img mb-5 px-5 pt-4"><img class="img-fluid rounded-circle"
+                  src="{% static 'images/person-sq-3-min.jpg' %}" alt="Ritik Sharma"></div>
+              <div class="info px-5 pt-5 mb-4">
+                <h3 class="fs-5 mb-0">Ritik Sharma</h3><span class="title">Internal Escalation L1</span>
+              </div>
+              <div class="social px-2 d-inline-flex gap-2"><a href="#"><i class="bi bi-envelope"></i></a><a href="#"><i
+                    class="bi bi-telephone"></i></a></div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="300">
+            <div class="card-item text-center rounded-5 pb-5 overflow-hidden">
+              <div class="img mb-5 px-5 pt-4"><img class="img-fluid rounded-circle"
+                  src="{% static 'images/person-sq-4-min.jpg' %}" alt="Accounts Team"></div>
+              <div class="info px-5 pt-5 mb-4">
+                <h3 class="fs-5 mb-0">Finance/Admin</h3><span class="title">Aggregator Payments</span>
+              </div>
+              <div class="social px-2 d-inline-flex gap-2"><a href="#"><i class="bi bi-envelope"></i></a><a href="#"><i
+                    class="bi bi-telephone"></i></a></div>
             </div>
           </div>
         </div>
-      </footer>
-      
-      <button id="back-to-top"><i class="bi bi-arrow-up-short"></i></button>
-      
+      </div>
     </div>
-    
-    <script src="{% static 'vendors/bootstrap/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'vendors/gsap/gsap.min.js' %}"></script>
-    <script src="{% static 'vendors/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
-    <script src="{% static 'vendors/isotope/isotope.pkgd.min.js' %}"></script>
-    <script src="{% static 'vendors/glightbox/glightbox.min.js' %}"></script>
-    <script src="{% static 'vendors/swiper/swiper-bundle.min.js' %}"></script>
-    <script src="{% static 'vendors/aos/aos.js' %}"></script>
-    <script src="{% static 'vendors/purecounter/purecounter.js' %}"></script>
-    <script src="{% static 'js/custom.js' %}"></script>
-  </body>
+
+    <div class="section faq__v3" id="faq">
+      <div class="container" data-aos="fade-up">
+        <div class="row">
+          <div class="col-lg-5 mx-auto text-center">
+            <h2 class="fs-4 fw-bold mb-3">Operation FAQ</h2>
+            <p class="mb-5">Guidelines for using the Rays Power Land Acquisition Platform.</p>
+          </div>
+        </div>
+        <div class="content rounded-4 py-5 px-4">
+          <div class="row">
+            <div class="col-lg-5 mb-5 mb-lg-0">
+              <img class="img-fluid rounded-5" src="{% static 'images/img-3-min.jpg' %}" alt="Operation Support">
+            </div>
+            <div class="col-lg-7">
+              <div class="accordion custom-accordion" id="accordionSOP">
+                <div class="accordion-item">
+                  <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse"
+                      data-bs-target="#f1">Can I skip the TSR phase for urgent registration?</button></h2>
+                  <div class="accordion-collapse collapse show" id="f1" data-bs-parent="#accordionSOP">
+                    <div class="accordion-body">No. All stage reorders must be processed through the Approval Engine. A
+                      Stage Deviation Request must be raised and approved by the Director level.</div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header"><button class="accordion-button collapsed" type="button"
+                      data-bs-toggle="collapse" data-bs-target="#f2">How are missing documents flagged?</button></h2>
+                  <div class="accordion-collapse collapse" id="f2" data-bs-parent="#accordionSOP">
+                    <div class="accordion-body">The AI Document Manager audits each survey number against the 28-column
+                      mandatory checklist. Pending items are flagged in Red on the site dashboard.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section contact__v5" id="contact">
+      <div class="container">
+        <div class="row mb-5">
+          <div class="col-12 mb-4" data-aos="fade-up">
+            <h2 class="fs-4 fw-bold">Site Support & Escalation</h2>
+          </div>
+          <div class="col-md-6 mb-5 mb-md-0">
+            <div class="d-flex flex-column gap-5">
+              <div class="d-flex align-items-start gap-3" data-aos="fade-up">
+                <div class="icon d-block"><i class="bi bi-telephone fs-5"></i></div>
+                <div> <span class="d-block fw-semibold">HO Land Department</span><span>Direct Support Line</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="rounded-5 form-wrapper mt-5" data-aos="fade-up">
+              <h4 class="mb-4">Raise SOP Deviation / Issue Ticket</h4>
+              <form id="contactForm">
+                <div class="row gap-3 mb-3">
+                  <div class="col-md-12">
+                    <label class="mb-2" for="subject">Project Name (e.g., Yelburga, Honnati)</label>
+                    <input class="form-control" id="subject" type="text" required>
+                  </div>
+                  <div class="col-md-12">
+                    <label class="mb-2" for="message">Deviation Reason / Missing Doc Detail</label>
+                    <textarea class="form-control" id="message" rows="5" required></textarea>
+                  </div>
+                </div>
+                <button class="btn btn-primary w-100 fw-semibold" type="submit">Submit for Approval</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer pt-5 pb-5">
+      <div class="container">
+        <div class="row justify-content-between mb-5 g-xl-5">
+          <div class="col-md-4 mb-5 mb-lg-0">
+            <h3 class="mb-3 fw-bold">Rays Power Infra</h3>
+            <p class="mb-4">A comprehensive land acquisition management system covering the full lifecycle from land
+              identification to original document handover.</p>
+          </div>
+          <div class="col-md-7">
+            <div class="row g-2">
+              <div class="col-md-6 col-lg-4 mb-4">
+                <h3 class="mb-3 fw-bold">Operations</h3>
+                <ul class="list-unstyled">
+                  <li><a href="#">MIS Dashboard</a></li>
+                  <li><a href="#">SOP Workflow</a></li>
+                  <li><a href="#">NOC Tracker</a></li>
+                </ul>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <h3 class="mb-3 fw-bold">Compliance</h3>
+                <ul class="list-unstyled">
+                  <li><a href="#">Rajasthan Statutory</a></li>
+                  <li><a href="#">Karnataka Statutory</a></li>
+                  <li><a href="#">Audit Logs</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row credits pt-3">
+          <div class="col-xl-8 text-center text-xl-start mb-3 mb-xl-0">
+            &copy;
+            <script>document.write(new Date().getFullYear());</script> Rays Power Infra Land Platform.
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <button id="back-to-top"><i class="bi bi-arrow-up-short"></i></button>
+
+  </div>
+
+  <script src="{% static 'vendors/bootstrap/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'vendors/gsap/gsap.min.js' %}"></script>
+  <script src="{% static 'vendors/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+  <script src="{% static 'vendors/isotope/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'vendors/glightbox/glightbox.min.js' %}"></script>
+  <script src="{% static 'vendors/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'vendors/aos/aos.js' %}"></script>
+  <script src="{% static 'vendors/purecounter/purecounter.js' %}"></script>
+  <script src="{% static 'js/custom.js' %}"></script>
+</body>
+
 </html>

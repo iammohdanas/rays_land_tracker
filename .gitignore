@@ -1,1 +1,23 @@
 mainapp/migrations
+authenticator/__pycache__/
+authenticator/migrations/
+db.sqlite3
+core/__pycache__/
+# SQLite
+db.sqlite3
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Django migrations
+*/migrations/
+!*/migrations/__init__.py
+
+# Virtual env
+venv/
+.env
+
+# Static/media generated
+media/
+staticfiles/
