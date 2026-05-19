@@ -1,0 +1,1017 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Hierarchical SOP Pipeline Management | Rays Power Infra{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Premium Multi-Tiered Layout Variable Tokens */
+    :root {
+        --sop-transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+
+        /* Premium Operational States Palette */
+        --sop-bg-standard: rgba(25, 135, 84, 0.05);
+        --sop-border-standard: rgba(25, 135, 84, 0.18);
+        --sop-text-standard: #166534;
+
+        --sop-bg-shuffled: rgba(255, 193, 7, 0.12);
+        --sop-border-shuffled: rgba(255, 193, 7, 0.45);
+        --sop-text-shuffled: #854d0e;
+    }
+
+    .workflow-section {
+        padding: 60px 0;
+        background: var(--bs-body-bg);
+    }
+
+    /* Core Drag Zone Styling Classes */
+    .stage-card {
+        transition: var(--sop-transition);
+        border: 2px solid var(--bs-border-color-translucent);
+        border-radius: 16px;
+        background: var(--bs-card-bg);
+    }
+
+    .stage-card.dragging {
+        opacity: 0.3;
+        transform: scale(0.98);
+        border-style: dashed !important;
+        border-color: var(--bs-primary) !important;
+    }
+
+    .stage-card.drag-over {
+        border-color: var(--bs-primary) !important;
+        background-color: rgba(var(--bs-primary-rgb), 0.03) !important;
+    }
+
+    /* Substage Wrapper for Containing Row and the Expanded Card Grid */
+    .substage-wrapper {
+        border-radius: 12px;
+        border: 1px solid var(--bs-border-color-translucent);
+        background: #ffffff;
+        transition: var(--sop-transition);
+        overflow: hidden;
+    }
+
+    .substage-row {
+        cursor: grab;
+        transition: background-color 0.2s ease;
+    }
+
+    .substage-row:hover {
+        background-color: var(--bs-tertiary-bg) !important;
+    }
+
+    .substage-wrapper.dragging {
+        opacity: 0.4;
+        background-color: var(--bs-secondary-bg) !important;
+        border-style: dashed !important;
+    }
+
+    .substage-wrapper.drag-over {
+        border-color: var(--bs-info) !important;
+        background-color: rgba(var(--bs-info-rgb), 0.08) !important;
+        transform: translateX(4px);
+    }
+
+    .drag-handle {
+        cursor: grab;
+        color: var(--bs-secondary-color);
+        opacity: 0.5;
+        transition: opacity 0.2s;
+    }
+
+    .drag-handle:hover {
+        opacity: 1;
+    }
+
+    /* Full-Width Robust Approval Drawer Panel */
+    .approval-expansion-card {
+        background: #f8fafc;
+        border-top: 1px dashed var(--bs-border-color-translucent);
+        display: none;
+        animation: slideDown 0.25s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-8px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Auto-fitting layout with a defensive minimum layout constraint */
+    .approver-matrix-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+    }
+
+    .tier-card {
+        background: #ffffff;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 10px;
+        padding: 16px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .tier-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    /* Premium High-Contrast Button for Action Visibility */
+    .btn-send-approval {
+        width: 100%;
+        white-space: nowrap;
+        min-width: 150px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff !important;
+        background-color: #0d6efd !important;
+        border: 1px solid #0d6efd !important;
+    }
+
+    .btn-send-approval:hover {
+        background-color: #0b5ed7 !important;
+    }
+
+    /* Console Terminal Output System */
+    .network-console {
+        background-color: #0f172a;
+        color: #e2e8f0;
+        font-family: 'SFMono-Regular', Menlo, Monaco, Consolas, monospace;
+        border-radius: 12px;
+        font-size: 0.8rem;
+    }
+
+    .console-log-stream {
+        max-height: 180px;
+        overflow-y: auto;
+    }
+
+    .font-satoshi {
+        font-family: 'Satoshi', sans-serif;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="workflow-section">
+    <div class="container" data-aos="fade-up">
+
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <span class="text-uppercase tracking-wider text-primary fw-bold font-satoshi small">Advanced Task
+                    Sequencing</span>
+                <h2 class="mt-2 fw-bold text-gradient font-satoshi">SOP Hierarchical Workflow Manager</h2>
+                <p class="text-muted">Manage land acquisition operational pipelines. Drag entire Stage Blocks to adjust
+                    master phases, or drag individual Nested Substages to cross-schedule core tasks.</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="bg-white rounded-4 shadow-sm border p-4 p-md-5">
+
+                    <div
+                        class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-5 pb-4 border-bottom">
+                        <div>
+                            <h4 class="fw-bold mb-1 font-satoshi">Multi-Tiered Workflow Matrix</h4>
+                            <p class="text-muted small mb-0">Standard steps are tinted Green. Reshuffled sequences turn
+                                Yellow pending administrative review parameters.</p>
+                        </div>
+
+                        <div class="d-flex gap-2 align-items-center">
+                            <button id="system-approve-btn"
+                                class="btn btn-sm btn-success rounded-pill font-satoshi d-none px-3 animate__animated animate__fadeIn">
+                                <i class="bi bi-patch-check-fill me-1"></i> Authorize Sequence Alteration
+                            </button>
+                            <div id="pipeline-badge-tracker"
+                                class="badge d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill fs-7 fw-semibold bg-success-subtle text-success border border-success-subtle">
+                                <span class="spinner-grow spinner-grow-sm text-success" role="status"
+                                    style="width: 8px; height: 8px;"></span>
+                                <span id="pipeline-badge-text">Standard Pipeline Order Active</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="master-stages-pipeline-wrapper" class="d-flex flex-column gap-4">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="network-console p-4 shadow-lg border border-secondary border-opacity-25">
+                    <div
+                        class="d-flex align-items-center justify-content-between pb-2 mb-3 border-bottom border-secondary border-opacity-25">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="spinner-grow text-success" style="width: 10px; height: 10px;"></span>
+                            <span class="text-uppercase font-satoshi fw-bold text-muted small tracking-wide">Live
+                                Multi-Tier API Monitor Logs</span>
+                        </div>
+                        <button class="btn btn-sm btn-outline-secondary py-0 px-2 fs-8"
+                            onclick="document.getElementById('live-console-stream').innerHTML = ''">Clear
+                            Console</button>
+                    </div>
+                    <div id="live-console-stream" class="console-log-stream text-start">
+                        <div class="text-secondary">[System Trace Log] Hierarchical layout initialized. Ready to map
+                            tracking payloads...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // COMPLETE CANONICAL SCHEMA - All 11 operational layers intact.
+    // Notice that stages 4 to 11 don't have static assignments initially ("") which triggers the "Send for Approval" link.
+    const CANONICAL_MASTER_BLUEPRINT = [
+        {
+            stageCode: "1",
+            stageName: "Stage 1: Identification & Finalization",
+            substages: [
+                { code: "1.1", title: "Land Identification & Land Finalization", role: "Aggregator", duration: "15 Days", approvals: { "Approver 1": "Approved", "Approver 2": "Approved", "Approver 3": "", "Approver 4": "" } },
+                { code: "1.2", title: "Aggregator Final MOU", role: "Aggregator", duration: "3 Days", approvals: { "Approver 1": "Approved", "Approver 2": "Rejected", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "2",
+            stageName: "Stage 2: Technical & Legal Due Diligence",
+            substages: [
+                { code: "2.1", title: "Land Document Collection", role: "Aggregator", duration: "20 Days", approvals: { "Approver 1": "Approved", "Approver 2": "Approved", "Approver 3": "Approved", "Approver 4": "Approved" } },
+                { code: "2.2", title: "Prima Facie TSR", role: "Internal Advocate", duration: "30 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "3",
+            stageName: "Stage 3: Legal Agreements Structure",
+            substages: [
+                { code: "3.1", title: "Agreement to Lease (ATL)", role: "Aggregator", duration: "60 Days", approvals: { "Approver 1": "Approved", "Approver 2": "", "Approver 3": "", "Approver 4": "" } },
+                { code: "3.2", title: "General Power of Attorney (GPA)", role: "Aggregator", duration: "Variable", approvals: { "Approver 1": "Approved", "Approver 2": "Approved", "Approver 3": "Approved", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "4",
+            stageName: "Stage 4: On-Site Surveys",
+            substages: [
+                { code: "4.1", title: "Other Works: Stone Marking + Possession", role: "Aggregator", duration: "7 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "5",
+            stageName: "Stage 5: Statutory Clearances",
+            substages: [
+                { code: "5.1", title: "NOC Clearances (Gram Panchayat/Forest/NHAI/etc.)", role: "Aggregator", duration: "30 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "6",
+            stageName: "Stage 6: Liability Encumbrance Clearances",
+            substages: [
+                { code: "6.1", title: "Clear Mortgages/Encumbrances/Liability or Loans", role: "Aggregator", duration: "50 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "7",
+            stageName: "Stage 7: Non-Agricultural Assessment",
+            substages: [
+                { code: "7.1", title: "Apply for NA Application", role: "Aggregator", duration: "45 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } },
+                { code: "7.2", title: "NA Order Procurement", role: "Aggregator", duration: "45 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "8",
+            stageName: "Stage 8: Final Title Verification",
+            substages: [
+                { code: "8.1", title: "Final TSR Execution", role: "Client", duration: "30 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "9",
+            stageName: "Stage 9: Registration Handover",
+            substages: [
+                { code: "9.1", title: "Lease Deed Execution", role: "Client", duration: "20 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "10",
+            stageName: "Stage 10: Portfolio SPV Updating",
+            substages: [
+                { code: "10.1", title: "Updation of Encumbrance Certificate (EC) in favour of SPV", role: "Aggregator", duration: "15 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "11",
+            stageName: "Stage 11: Document Archive Delivery",
+            substages: [
+                { code: "11.1", title: "Handing Over Original Documents to Client", role: "Senior Manager P.D", duration: "7 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
+        }
+    ];
+
+    let expandedSubstagesRegistry = {};
+    let activeWorkflowState = JSON.parse(JSON.stringify(CANONICAL_MASTER_BLUEPRINT));
+
+    activeWorkflowState.forEach(stg => {
+        stg.approved = true;
+        stg.substages.forEach(sub => sub.approved = true);
+    });
+
+    const pipelineWrapperDOM = document.getElementById('master-stages-pipeline-wrapper');
+    const badgeTextDOM = document.getElementById('pipeline-badge-text');
+    const badgeWrapperDOM = document.getElementById('pipeline-badge-tracker');
+    const actionAuthorizeBtn = document.getElementById('system-approve-btn');
+    const executionConsoleDOM = document.getElementById('live-console-stream');
+
+    /**
+     * Master Multi-Tiered Hierarchical Rendering Matrix
+     */
+    function renderHierarchicalWorkflowEngine() {
+
+        pipelineWrapperDOM.innerHTML = '';
+
+        activeWorkflowState.forEach((stageItem, stageIdx) => {
+
+            const isStageShuffled =
+                stageItem.stageCode !==
+                CANONICAL_MASTER_BLUEPRINT[stageIdx]?.stageCode;
+
+            const stageRequiresApproval =
+                isStageShuffled && !stageItem.approved;
+
+            const stageColorStyle =
+                stageRequiresApproval
+                    ? 'var(--sop-bg-shuffled)'
+                    : 'var(--sop-bg-standard)';
+
+            const stageBorderStyle =
+                stageRequiresApproval
+                    ? 'var(--sop-border-shuffled)'
+                    : 'var(--sop-border-standard)';
+
+            const stageTextColorStyle =
+                stageRequiresApproval
+                    ? 'var(--sop-text-shuffled)'
+                    : 'var(--sop-text-standard)';
+
+            const stageNodeElement = document.createElement('div');
+
+            stageNodeElement.className =
+                "stage-card shadow-sm p-4 animate__animated animate__fadeIn";
+
+            stageNodeElement.style =
+                `background-color: ${stageColorStyle};
+             border-color: ${stageBorderStyle};
+             color: ${stageTextColorStyle};`;
+
+            stageNodeElement.setAttribute('draggable', 'true');
+            stageNodeElement.setAttribute('data-type', 'stage');
+            stageNodeElement.setAttribute('data-stage-idx', stageIdx);
+            stageNodeElement.setAttribute(
+                'id',
+                `stage-node-${stageItem.stageCode}`
+            );
+
+            let stageHeaderContent = `
+            <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
+
+                <div class="d-flex align-items-center gap-2">
+
+                    <div class="drag-handle fs-5">
+                        <i class="bi bi-grip-vertical"></i>
+                    </div>
+
+                    <h5 class="fw-bold mb-0 font-satoshi">
+                        ${stageItem.stageName}
+                    </h5>
+
+                    ${stageRequiresApproval
+                    ? `
+                                <span class="badge bg-warning text-dark fs-9 rounded-pill ms-1">
+                                    Stage Reordered
+                                </span>
+                              `
+                    : ''
+                }
+
+                </div>
+
+                <span class="badge bg-white text-dark border font-mono small px-2 py-1">
+                    ${stageItem.substages.length} Activities
+                </span>
+
+            </div>
+
+            <div class="substage-drop-zone d-flex flex-column gap-2"
+                 data-parent-stage-idx="${stageIdx}">
+        `;
+
+            stageItem.substages.forEach((subtask, subtaskIdx) => {
+
+                let originalSubstageMatch = null;
+
+                CANONICAL_MASTER_BLUEPRINT.forEach(origStg => {
+
+                    const match =
+                        origStg.substages.find(
+                            oSub => oSub.code === subtask.code
+                        );
+
+                    if (match) {
+                        originalSubstageMatch = {
+                            stageCode: origStg.stageCode,
+                            sub: match
+                        };
+                    }
+                });
+
+                const originalStage =
+                    CANONICAL_MASTER_BLUEPRINT.find(stage =>
+                        stage.substages.some(s => s.code === subtask.code)
+                    );
+
+                const originalIndex =
+                    originalStage?.substages.findIndex(
+                        s => s.code === subtask.code
+                    );
+
+                const isSubtaskShuffled =
+                    !originalStage ||
+
+                    // moved to another stage
+                    stageItem.stageCode !== originalStage.stageCode ||
+
+                    // reordered inside same stage
+                    subtaskIdx !== originalIndex;
+
+                const subtaskRequiresApproval =
+                    isSubtaskShuffled && !subtask.approved;
+
+                const subBg =
+                    subtaskRequiresApproval
+                        ? 'rgba(255, 193, 7, 0.1)'
+                        : '#ffffff';
+
+                const subBorder =
+                    subtaskRequiresApproval
+                        ? 'var(--sop-border-shuffled)'
+                        : 'var(--bs-border-color-translucent)';
+
+                const isExpanded =
+                    expandedSubstagesRegistry[subtask.code] === true;
+
+                const displayStyle =
+                    isExpanded ? 'block' : 'none';
+
+                const chevronIcon =
+                    isExpanded
+                        ? 'bi-chevron-up'
+                        : 'bi-chevron-down';
+
+                let gridItemsHtml = '';
+
+                Object.keys(subtask.approvals).forEach(approver => {
+
+                    const status = subtask.approvals[approver];
+
+                    let statusLabelMarkup = '';
+
+                    if (status === "Approved") {
+
+                        statusLabelMarkup = `
+                        <div class="d-flex align-items-center gap-2 text-success py-1">
+                            <i class="bi bi-check-circle-fill fs-5"></i>
+                            <span class="fw-bold fs-7">Approved</span>
+                        </div>
+                    `;
+
+                    } else if (status === "Rejected") {
+
+                        statusLabelMarkup = `
+                        <div class="d-flex align-items-center gap-2 text-danger py-1">
+                            <i class="bi bi-x-circle-fill fs-5"></i>
+                            <span class="fw-bold fs-7">Rejected</span>
+                        </div>
+                    `;
+
+                    } else if (status === "Pending") {
+
+                        statusLabelMarkup = `
+                        <div class="d-flex align-items-center gap-2 text-warning py-1 fw-bold fs-7">
+                            <i class="bi bi-clock-history fs-5"></i>
+                            <span>Pending</span>
+                        </div>
+                    `;
+
+                    } else {
+
+                        statusLabelMarkup = `
+                        <button class="btn btn-sm btn-send-approval py-2 px-3 fs-8 fw-bold"
+                                onclick="executeTriggerApproval('${subtask.code}', '${approver}', event)">
+                            Send for Approval
+                        </button>
+                    `;
+                    }
+
+                    gridItemsHtml += `
+                    <div class="tier-card d-flex flex-column justify-content-between gap-3">
+
+                        <div class="border-bottom pb-1">
+                            <span class="fs-9 text-uppercase text-muted fw-bold">
+                                Governance Layer
+                            </span>
+
+                            <h6 class="font-satoshi text-dark fw-bold mb-0">
+                                ${approver}
+                            </h6>
+                        </div>
+
+                        <div class="status-action-container">
+                            ${statusLabelMarkup}
+                        </div>
+
+                    </div>
+                `;
+                });
+
+                stageHeaderContent += `
+                <div class="substage-wrapper"
+                     draggable="true"
+                     data-type="substage"
+                     data-stage-origin="${stageIdx}"
+                     data-substage-origin="${subtaskIdx}"
+                     style="border-color: ${subBorder} !important;">
+
+                    <div class="substage-row d-flex flex-column flex-md-row align-items-md-center justify-content-between p-3"
+                         style="background-color: ${subBg} !important;">
+
+                        <div class="d-flex align-items-center gap-3">
+
+                            <div class="drag-handle text-muted">
+                                <i class="bi bi-grid-3x2-gap"></i>
+                            </div>
+
+                            <div>
+                                <span class="badge bg-secondary-subtle text-secondary-emphasis font-mono me-2">
+                                    ${subtask.code}
+                                </span>
+
+                                <span class="fw-medium font-satoshi text-dark">
+                                    ${subtask.title}
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3 mt-2 mt-md-0 fs-8 text-muted">
+
+                            <div>
+                                <i class="bi bi-person-badge me-1"></i>
+                                ${subtask.role}
+                            </div>
+
+                            <div>
+                                <i class="bi bi-alarm me-1"></i>
+                                ${subtask.duration}
+                            </div>
+
+                            <button class="btn btn-sm btn-outline-primary py-1 px-3 fs-8 rounded-pill"
+                                    type="button"
+                                    onclick="toggleApprovalDrawer('${subtask.code}', this, event)">
+
+                                Approvals Matrix
+                                <i class="bi ${chevronIcon} toggle-chevron"></i>
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                    <div id="drawer-${subtask.code}"
+                         class="approval-expansion-card p-4"
+                         style="display:${displayStyle};">
+
+                        <div class="approver-matrix-grid">
+                            ${gridItemsHtml}
+                        </div>
+
+                    </div>
+
+                </div>
+            `;
+            });
+
+            // EMPTY STAGE PLACEHOLDER
+            if (stageItem.substages.length === 0) {
+
+                stageHeaderContent += `
+                <div class="empty-stage-placeholder text-center py-4 text-muted border rounded bg-light">
+                    Drop substage here
+                </div>
+            `;
+            }
+
+            stageHeaderContent += `</div>`;
+
+            stageNodeElement.innerHTML = stageHeaderContent;
+
+            attachDragAndDropInteractionListeners(stageNodeElement);
+
+            pipelineWrapperDOM.appendChild(stageNodeElement);
+
+        });
+
+        evaluateMasterPipelineStates();
+    }/**
+     * Toggles expansion drawer mapping references
+     */
+    window.toggleApprovalDrawer = function (substageCode, actionButton, event) {
+        event.stopPropagation();
+        const drawerTarget = document.getElementById(`drawer-${substageCode}`);
+        const chevronIcon = actionButton.querySelector('.toggle-chevron');
+
+        if (drawerTarget.style.display === "none") {
+            drawerTarget.style.display = "block";
+            chevronIcon.classList.replace('bi-chevron-down', 'bi-chevron-up');
+            expandedSubstagesRegistry[substageCode] = true;
+        } else {
+            drawerTarget.style.display = "none";
+            chevronIcon.classList.replace('bi-chevron-up', 'bi-chevron-down');
+            expandedSubstagesRegistry[substageCode] = false;
+        }
+    }
+
+    /**
+     * Set active validation token cleanly to stable "Pending" state view block
+     */
+    window.executeTriggerApproval = function (substageCode, approverName, event) {
+        event.stopPropagation();
+
+        activeWorkflowState.forEach(stg => {
+            stg.substages.forEach(sub => {
+                if (sub.code === substageCode) {
+                    sub.approvals[approverName] = "Pending";
+                }
+            });
+        });
+
+        dispatchNetworkTelemetryLog("API_CALL", `POST -> Sent workflow token payload for Substage [${substageCode}] to [${approverName}]. Status changed to Pending.`);
+        renderHierarchicalWorkflowEngine();
+    }
+
+    /**
+     * Programmatic Event Wire Hooks Router Assignment Blocks
+     */
+    function attachDragAndDropInteractionListeners(nodeElement) {
+        nodeElement.addEventListener('dragstart', handleMasterDragStart);
+        nodeElement.addEventListener('dragover', handleMasterDragOver);
+        nodeElement.addEventListener('dragleave', handleMasterDragLeave);
+        nodeElement.addEventListener('drop', handleMasterDrop);
+        nodeElement.addEventListener('dragend', handleMasterDragEnd);
+
+        const dropZone = nodeElement.querySelector('.substage-drop-zone');
+
+        dropZone.addEventListener('dragover', handleEmptyStageDragOver);
+        dropZone.addEventListener('dragleave', handleEmptyStageDragLeave);
+        dropZone.addEventListener('drop', handleEmptyStageDrop);
+
+        const childRows = nodeElement.querySelectorAll('.substage-wrapper');
+
+        childRows.forEach(row => {
+            row.addEventListener('dragstart', handleSubtaskDragStart);
+            row.addEventListener('dragover', handleSubtaskDragOver);
+            row.addEventListener('dragleave', handleSubtaskDragLeave);
+            row.addEventListener('drop', handleSubtaskDrop);
+            row.addEventListener('dragend', handleSubtaskDragEnd);
+        });
+    }
+
+    let trackingDragType = null;
+    let sourceStageIndex = null;
+    let sourceSubstageIndex = null;
+
+    function handleMasterDragStart(e) {
+        if (e.target.getAttribute('data-type') !== 'stage') return;
+        trackingDragType = 'stage';
+        sourceStageIndex = parseInt(this.getAttribute('data-stage-idx'));
+        this.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleEmptyStageDragOver(e) {
+
+        if (trackingDragType !== 'substage') return;
+
+        e.preventDefault();
+
+        this.classList.add('drag-over');
+
+        startAutoScroll(e.clientY);
+
+        return false;
+    }
+
+    function handleEmptyStageDragLeave() {
+        this.classList.remove('drag-over');
+    }
+
+    function handleEmptyStageDrop(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (trackingDragType !== 'substage') return;
+
+        const destinationStageIdx = parseInt(
+            this.getAttribute('data-parent-stage-idx')
+        );
+
+        if (sourceStageIndex !== null && sourceSubstageIndex !== null) {
+
+            const movedSubtaskPayload =
+                activeWorkflowState[sourceStageIndex]
+                    .substages.splice(sourceSubstageIndex, 1)[0];
+
+            movedSubtaskPayload.approved = false;
+
+            // Push into empty stage
+            activeWorkflowState[destinationStageIdx]
+                .substages.push(movedSubtaskPayload);
+
+            renderHierarchicalWorkflowEngine();
+
+            dispatchNetworkTelemetryLog(
+                "SUBSTAGE_REORDER",
+                `Moved Subtask [${movedSubtaskPayload.code}] into empty Stage [${destinationStageIdx + 1}]`
+            );
+        }
+
+        this.classList.remove('drag-over');
+
+        return false;
+    }
+
+    function handleMasterDragOver(e) {
+
+        if (trackingDragType !== 'stage') return;
+
+        e.preventDefault();
+
+        this.classList.add('drag-over');
+
+        // AUTO SCROLL
+        startAutoScroll(e.clientY);
+
+        return false;
+    }
+
+    function handleMasterDragLeave() {
+        this.classList.remove('drag-over');
+    }
+
+    function handleMasterDrop(e) {
+
+        if (trackingDragType !== 'stage') {
+            return;
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        stopAutoScroll();
+
+        const targetStageIndex = parseInt(
+            this.getAttribute('data-stage-idx')
+        );
+
+        if (
+            sourceStageIndex !== null &&
+            sourceStageIndex !== targetStageIndex
+        ) {
+
+            const movedStageBlock =
+                activeWorkflowState.splice(sourceStageIndex, 1)[0];
+
+            movedStageBlock.approved =
+                (
+                    movedStageBlock.stageCode ===
+                    CANONICAL_MASTER_BLUEPRINT[targetStageIndex]?.stageCode
+                );
+
+            activeWorkflowState.splice(
+                targetStageIndex,
+                0,
+                movedStageBlock
+            );
+
+            renderHierarchicalWorkflowEngine();
+
+            dispatchNetworkTelemetryLog(
+                "STAGE_REORDER",
+                `Moved Stage [${movedStageBlock.stageName}] into Position Index [${targetStageIndex + 1}]`
+            );
+        }
+
+        return false;
+    }
+    function handleMasterDragEnd() {
+
+        stopAutoScroll();
+
+        this.classList.remove('dragging');
+
+        document
+            .querySelectorAll('.stage-card')
+            .forEach(c => c.classList.remove('drag-over'));
+    }
+
+    function handleSubtaskDragStart(e) {
+        if (e.target.closest('.approval-expansion-card') || e.target.closest('button')) {
+            e.preventDefault();
+            return;
+        }
+        e.stopPropagation();
+        trackingDragType = 'substage';
+        sourceStageIndex = parseInt(this.getAttribute('data-stage-origin'));
+        sourceSubstageIndex = parseInt(this.getAttribute('data-substage-origin'));
+        this.classList.add('dragging');
+    }
+
+    function handleSubtaskDragOver(e) {
+
+        if (trackingDragType !== 'substage') return;
+
+        e.preventDefault();
+
+        this.classList.add('drag-over');
+
+        startAutoScroll(e.clientY);
+
+        return false;
+    }
+    function handleSubtaskDragLeave() {
+        this.classList.remove('drag-over');
+    }
+
+    function handleSubtaskDrop(e) {
+        e.stopPropagation();
+        if (trackingDragType !== 'substage') return;
+
+        const destinationStageIdx = parseInt(this.getAttribute('data-stage-origin'));
+        const destinationSubtaskIdx = parseInt(this.getAttribute('data-substage-origin'));
+
+        if (sourceStageIndex !== null && sourceSubstageIndex !== null) {
+            const movedSubtaskPayload = activeWorkflowState[sourceStageIndex].substages.splice(sourceSubstageIndex, 1)[0];
+            movedSubtaskPayload.approved = false;
+            activeWorkflowState[destinationStageIdx].substages.splice(destinationSubtaskIdx, 0, movedSubtaskPayload);
+            stopAutoScroll();
+            renderHierarchicalWorkflowEngine();
+            dispatchNetworkTelemetryLog("SUBSTAGE_REORDER", `Reshuffled Subtask [${movedSubtaskPayload.code}] from Stage [${sourceStageIndex + 1}] into Stage [${destinationStageIdx + 1}]`);
+        }
+        return false;
+    }
+
+    function handleSubtaskDragEnd(e) {
+
+        e.stopPropagation();
+
+        stopAutoScroll();
+
+        this.classList.remove('dragging');
+
+        document
+            .querySelectorAll('.substage-wrapper')
+            .forEach(r => r.classList.remove('drag-over'));
+    }
+    function evaluateMasterPipelineStates() {
+        let structuralAlterationsActive = false;
+
+        activeWorkflowState.forEach((stage, sIdx) => {
+            if (stage.stageCode !== CANONICAL_MASTER_BLUEPRINT[sIdx]?.stageCode && !stage.approved) {
+                structuralAlterationsActive = true;
+            }
+            stage.substages.forEach((sub, subIdx) => {
+                let defaultParentMatch = CANONICAL_MASTER_BLUEPRINT[sIdx]?.substages[subIdx];
+                if (!defaultParentMatch || sub.code !== defaultParentMatch.code) {
+                    if (!sub.approved) structuralAlterationsActive = true;
+                }
+            });
+        });
+
+        if (structuralAlterationsActive) {
+            badgeWrapperDOM.className = "badge d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill fs-7 fw-semibold bg-warning-subtle text-warning border border-warning-subtle animate__animated animate__pulse";
+            badgeTextDOM.innerText = "Pipeline Shifted (Review Required)";
+            actionAuthorizeBtn.classList.remove('d-none');
+        } else {
+            badgeWrapperDOM.className = "badge d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill fs-7 fw-semibold bg-success-subtle text-success border border-success-subtle";
+            badgeTextDOM.innerText = "Standard Flow Execution Sequence Active";
+            actionAuthorizeBtn.classList.add('d-none');
+        }
+    }
+
+    actionAuthorizeBtn.addEventListener('click', () => {
+        activeWorkflowState.forEach(stg => {
+            stg.approved = true;
+            stg.substages.forEach(sub => sub.approved = true);
+        });
+
+        dispatchNetworkTelemetryLog("WEBHOOK_AUTHORIZATION", "Administrative authorization token applied. Clearing structural warnings...");
+        renderHierarchicalWorkflowEngine();
+    });
+
+    function dispatchNetworkTelemetryLog(actionType, detailMessage) {
+        const timeToken = new Date().toLocaleTimeString();
+        const traceNode = document.createElement('div');
+        traceNode.className = "mb-1 animate__animated animate__fadeInLeft";
+
+        traceNode.innerHTML = `
+            <span class="text-info">[${timeToken}]</span> 
+            <span class="text-warning">POST -> /api/v1/workflow/hierarchical/update</span> 
+            <br><span class="text-muted ps-3"><strong>[${actionType}]</strong> ${detailMessage}</span>
+        `;
+        executionConsoleDOM.insertBefore(traceNode, executionConsoleDOM.firstChild);
+    }
+    let autoScrollInterval = null;
+    let currentScrollDirection = null;
+
+    function startAutoScroll(clientY) {
+
+        const viewportHeight = window.innerHeight;
+
+        const scrollThreshold = 140;
+
+        let desiredDirection = null;
+
+        // TOP
+        if (clientY < scrollThreshold) {
+
+            desiredDirection = 'up';
+
+        }
+
+        // BOTTOM
+        else if (
+            clientY >
+            viewportHeight - scrollThreshold
+        ) {
+
+            desiredDirection = 'down';
+        }
+
+        // NO SCROLL ZONE
+        else {
+
+            stopAutoScroll();
+
+            return;
+        }
+
+        // Prevent interval recreation spam
+        if (
+            autoScrollInterval &&
+            currentScrollDirection === desiredDirection
+        ) {
+            return;
+        }
+
+        stopAutoScroll();
+
+        currentScrollDirection = desiredDirection;
+
+        autoScrollInterval = setInterval(() => {
+
+            window.scrollBy({
+                top: desiredDirection === 'up' ? -18 : 18,
+                behavior: 'auto'
+            });
+
+        }, 16);
+    }
+    function stopAutoScroll() {
+
+        if (autoScrollInterval) {
+
+            clearInterval(autoScrollInterval);
+
+            autoScrollInterval = null;
+        }
+
+        currentScrollDirection = null;
+    }
+    document.addEventListener('DOMContentLoaded', renderHierarchicalWorkflowEngine);
+</script>
+{% endblock %}

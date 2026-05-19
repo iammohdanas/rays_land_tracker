@@ -1,8 +1,3 @@
-mainapp/migrations
-authenticator/__pycache__/
-authenticator/migrations/
-db.sqlite3
-core/__pycache__/
 # SQLite
 db.sqlite3
 
@@ -11,13 +6,27 @@ __pycache__/
 *.py[cod]
 
 # Django migrations
-*/migrations/
+*/migrations/*
 !*/migrations/__init__.py
 
-# Virtual env
+# Specific cache folders
+authenticator/__pycache__/
+core/__pycache__/
+rays_land_tracker/__pycache__/
+mainapp/__pycache__/
+
+# Virtual environment
 venv/
 .env
 
-# Static/media generated
+# Static & media generated files
 media/
 staticfiles/
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

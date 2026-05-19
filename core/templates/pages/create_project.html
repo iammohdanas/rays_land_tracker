@@ -1,0 +1,350 @@
+<!-- templates/projects/create_project.html -->
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* Premium visual refinements */
+    .hover-elevate {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .hover-elevate:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08) !important;
+    }
+
+    .fs-7 {
+        font-size: 0.785rem;
+    }
+
+    .ls-wide {
+        letter-spacing: 0.05em;
+    }
+
+    .input-premium {
+        border-color: #e2e8f0;
+        border-radius: 0.5rem;
+        padding: 0.625rem 0.875rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .input-premium:focus {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+    }
+
+    .btn-action-delete {
+        color: #dc3545;
+        background-color: transparent;
+        border: 1px solid transparent;
+        transition: all 0.2s;
+    }
+
+    .btn-action-delete:hover {
+        background-color: #fff5f5;
+        border-color: #f8d7da;
+    }
+</style>
+
+<div class="container py-5" style="max-width: 1100px;">
+
+    <!-- Main Builder Card -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
+
+        <div class="card-body p-4 p-md-5">
+
+            <!-- Header Section -->
+            <div
+                class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-5 border-bottom pb-4">
+                <div>
+                    <span
+                        class="badge bg-primary-subtle text-primary mb-2 px-2 py-1 fs-7 fw-semibold text-uppercase ls-wide">Project
+                        Workspace</span>
+                    <h2 class="fw-bold text-dark mb-1">Create Workflow Project</h2>
+                    <p class="text-secondary mb-0 small">Dynamically structure stages, milestones, and workforce
+                        allocations.</p>
+                </div>
+                <div>
+                    <button class="btn btn-primary px-4 py-2 fw-semibold d-flex align-items-center gap-2 shadow-sm"
+                        onclick="addStage()">
+                        <i class="bi bi-plus-circle"></i> Add Stage
+                    </button>
+                </div>
+            </div>
+
+            <!-- Meta Information Matrix -->
+            <div class="bg-light p-4 rounded-4 mb-5">
+                <h5 class="fw-bold text-secondary mb-4 fs-7 text-uppercase ls-wide">Core Metadata</h5>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="form-label text-secondary fw-semibold small text-uppercase ls-wide mb-1">Project
+                            Name</label>
+                        <input type="text" class="form-control input-premium bg-white" id="project-name"
+                            placeholder="e.g. Solar Array Array-Delta">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label text-secondary fw-semibold small text-uppercase ls-wide mb-1">Project
+                            Code</label>
+                        <input type="text" class="form-control input-premium bg-white" id="project-code"
+                            placeholder="e.g. PRJ-SOL-04">
+                        <input type="hidden" id="project-id">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label text-secondary fw-semibold small text-uppercase ls-wide mb-1">Location
+                            / Site Coordinates</label>
+                        <input type="text" class="form-control input-premium bg-white" id="project-location"
+                            placeholder="e.g. Gujarat, India">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label text-secondary fw-semibold small text-uppercase ls-wide mb-1">Capacity
+                            (MW)</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control input-premium bg-white" id="project-capacity"
+                                placeholder="0.00">
+                            <span class="input-group-text bg-white border-start-0 text-secondary small fw-semibold"
+                                style="border-color: #e2e8f0; border-radius: 0 0.5rem 0.5rem 0;">MW</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dynamic Workflow Section -->
+            <div class="mb-4">
+                <h5 class="fw-bold text-dark mb-3 d-flex align-items-center gap-2">
+                    <i class="bi bi-layers text-primary"></i> Workflow Architecture
+                </h5>
+                <div id="stage-container"></div>
+            </div>
+
+            <!-- Action Architecture Footer -->
+            <div class="pt-4 border-top d-flex justify-content-end align-items-center gap-3">
+                <a href="#" class="btn btn-link text-decoration-none text-secondary fw-semibold">Cancel</a>
+                <button class="btn btn-success px-5 py-2.5 fw-semibold shadow-sm" onclick="createProject()">
+                    Initialize Project
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    let workflowBlueprint = [];
+
+    async function loadBlueprint() {
+        try {
+            const response = await fetch('/api/workflow-blueprint/');
+            const data = await response.json();
+            const projectId = document.getElementById('project-id').value || generate_project_id();
+            workflowBlueprint = (data.results || []).map((stage, stageIndex) => {
+                const stageId = stage.stageId || generate_stage_id(projectId, stageIndex);
+
+                const substages = (stage.substages || []).map((substage, subIndex) => ({
+                    ...substage,
+                    substageId:
+                        substage.substageId ||
+                        generate_substage_id(stageId, subIndex)
+                }));
+
+                return {
+                    ...stage,
+                    stageId: stageId,
+                    substages: substages
+                };
+            });
+            renderStages();
+        } catch (error) {
+            console.error("Failed to load blueprint architecture:", error);
+        }
+    }
+
+    function renderStages() {
+        const container = document.getElementById('stage-container');
+        container.innerHTML = '';
+
+        if (workflowBlueprint.length === 0) {
+            container.innerHTML = `
+            <div class="text-center py-5 border border-dashed rounded-4 bg-light">
+                <p class="text-secondary mb-0">No pipeline stages defined. Click 'Add Stage' to populate your workflow.</p>
+            </div>
+        `;
+            return;
+        }
+
+        workflowBlueprint.forEach((stage, stageIndex) => {
+            let substagesHtml = '';
+
+            stage.substages.forEach((substage, subIndex) => {
+                substagesHtml += `
+                <div class="bg-white border border-light-subtle rounded-3 p-3 mb-3 position-relative">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-2">
+                            <label class="form-label text-muted fs-7 text-uppercase ls-wide mb-1 fw-medium">Substage Code</label>
+                            <input type="text" class="form-control form-control-sm input-premium" value="${substage.code || ''}" 
+                                placeholder="e.g. SUB-101" onchange="updateSubstage(${stageIndex}, ${subIndex}, 'code', this.value)">
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label text-muted fs-7 text-uppercase ls-wide mb-1 fw-medium">Title / Objective</label>
+                            <input type="text" class="form-control form-control-sm input-premium" value="${substage.title || ''}" 
+                                placeholder="e.g. Geotechnical Assessment" onchange="updateSubstage(${stageIndex}, ${subIndex}, 'title', this.value)">
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label text-muted fs-7 text-uppercase ls-wide mb-1 fw-medium">Accountable Role</label>
+                            <input type="text" class="form-control form-control-sm input-premium" value="${substage.role || ''}" 
+                                placeholder="e.g. Lead Surveyor" onchange="updateSubstage(${stageIndex}, ${subIndex}, 'role', this.value)">
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label text-muted fs-7 text-uppercase ls-wide mb-1 fw-medium">Duration (Days)</label>
+                            <input type="number" class="form-control form-control-sm input-premium" value="${substage.duration || ''}" 
+                                placeholder="Days" onchange="updateSubstage(${stageIndex}, ${subIndex}, 'duration', this.value)">
+                        </div>
+
+                        <div class="col-md-1 text-end">
+                            <button class="btn btn-action-delete btn-sm w-100 rounded-3 py-2" title="Remove Substage" 
+                                onclick="deleteSubstage(${stageIndex}, ${subIndex})">
+                                <span class="d-md-none me-1">Remove</span>&times;
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            });
+
+            container.innerHTML += `
+            <div class="card shadow-sm border border-light-subtle rounded-4 mb-4 hover-elevate overflow-hidden" style="background: #fdfdfd;">
+                <div class="card-body p-4">
+                    
+                    <!-- Stage Control Header -->
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mb-4 pb-3 border-bottom border-light-subtle">
+                        <div class="d-flex align-items-center gap-2 flex-grow-1">
+                            <span class="badge bg-secondary text-white rounded-2 px-2 py-1 fs-7 fw-bold">Stage ${stageIndex + 1}</span>
+                            <input type="text" class="form-control form-control-lg fw-bold bg-transparent border-0 p-0 text-dark" 
+                                value="${stage.stageName}" style="box-shadow: none;" onchange="updateStage(${stageIndex}, this.value)">
+                        </div>
+                        <div>
+                            <button class="btn btn-outline-danger btn-sm px-3 rounded-2" onclick="deleteStage(${stageIndex})">
+                                Delete Stage
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Inner Substage Stack -->
+                    <div class="ps-md-3 mb-3">
+                        ${substagesHtml}
+                    </div>
+
+                    <!-- Foot Action Area inside Card -->
+                    <div class="ps-md-3">
+                        <button class="btn btn-sm btn-outline-primary px-3 rounded-2 fw-medium d-inline-flex align-items-center gap-1" 
+                            onclick="addSubstage(${stageIndex})">
+                            + Add Substage Element
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        `;
+        });
+    }
+
+    function updateStage(stageIndex, value) {
+        workflowBlueprint[stageIndex].stageName = value;
+    }
+
+    function updateSubstage(stageIndex, subIndex, field, value) {
+        workflowBlueprint[stageIndex].substages[subIndex][field] = value;
+    }
+
+    document.getElementById('project-id').value = generate_project_id();
+
+    function addStage() {
+        const projectId = document.getElementById('project-id')?.value || generate_project_id();
+        const stageIndex = workflowBlueprint.length;
+        const stageId = generate_stage_id(projectId, stageIndex);
+
+        workflowBlueprint.push({
+            stageId: stageId,
+            stageCode: `STG${String(stageIndex + 1).padStart(2, '0')}`,
+            stageName: 'Untitled Phase Block',
+            substages: []
+        });
+
+        renderStages();
+    }
+
+    function deleteStage(stageIndex) {
+        workflowBlueprint.splice(stageIndex, 1);
+        renderStages();
+    }
+
+    function addSubstage(stageIndex) {
+        const stage = workflowBlueprint[stageIndex];
+        const substageIndex = stage.substages.length;
+        const substageId = generate_substage_id(stage.stageId, substageIndex);
+
+        stage.substages.push({
+            substageId: substageId,
+            code: `SUBSTG${String(substageIndex + 1).padStart(2, '0')}`,
+            title: '',
+            role: '',
+            duration: ''
+        });
+
+        renderStages();
+    }
+
+    function deleteSubstage(stageIndex, subIndex) {
+        workflowBlueprint[stageIndex].substages.splice(subIndex, 1);
+        renderStages();
+    }
+
+    async function createProject() {
+        const payload = {
+            name: document.getElementById('project-name').value,
+            project_id: document.getElementById('project-id').value,
+            code: document.getElementById('project-code').value,
+            location: document.getElementById('project-location').value,
+            capacity_mw: document.getElementById('project-capacity').value,
+            stages: workflowBlueprint
+        };
+        console.log(payload);
+        try {
+            const response = await fetch('/api/create-project/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await response.json();
+            alert(data.message || "Project setup initialized successfully.");
+        } catch (error) {
+            console.error("Error creating project:", error);
+        }
+    }
+
+    function generate_project_id() {
+        const randomNumber = Math.floor(100000 + Math.random() * 900000);
+        return `RPIP${randomNumber}`;
+    }
+
+    function generate_stage_id(projectId, stageIndex) {
+        return `${projectId}-STG${String(stageIndex + 1).padStart(2, '0')}`;
+    }
+
+    function generate_substage_id(stageId, substageIndex) {
+        return `${stageId}-SUBSTG${String(substageIndex + 1).padStart(2, '0')}`;
+    }
+    loadBlueprint();
+</script>
+{% endblock %}

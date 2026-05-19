@@ -188,7 +188,6 @@ def logout_from_all_devices(request):
     # Assuming sessions are stored in Django's session framework and each device has a unique session
     for session in user.session_set.all():
         session.delete()  # Delete the session for the current device
-    
     # Optionally, log the user out from the current session as well
     logout(request)
     

@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet"
+href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+<div class="container py-5">
+
+    <div class="card border-0 shadow-sm rounded-4">
+
+        <div class="card-body p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <div>
+                    <h3 class="fw-bold mb-1">Projects</h3>
+
+                    <p class="text-muted mb-0">
+                        EPC Workflow Management Projects
+                    </p>
+                </div>
+
+                <a href="/projects/create/"
+                   class="btn btn-primary">
+                    Create Project
+                </a>
+
+            </div>
+
+            <div class="table-responsive">
+
+                <table id="projectTable"
+                       class="table table-hover align-middle">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>Project</th>
+                            <th>Code</th>
+                            <th>Project ID</th>
+                            <th>Location</th>
+                            <th>Capacity</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+
+                    <tbody></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+
+$(document).ready(function () {
+
+    $('#projectTable').DataTable({
+
+        ajax: {
+            url: '/api/projects/',
+            dataSrc: 'data'
+        },
+
+        processing: true,
+
+        columns: [
+
+            {
+                data: 'name',
+
+                render: function(data, type, row) {
+
+                    return `
+                        <a href="${row.view_url}"
+                           class="fw-semibold text-decoration-none">
+                            ${data}
+                        </a>
+                    `;
+                }
+            },
+
+            {
+                data: 'code'
+            },
+
+            {
+                data: 'project_id'
+            },
+
+            {
+                data: 'location'
+            },
+
+            {
+                data: 'capacity_mw',
+
+                render: function(data) {
+                    return `${data || 0} MW`;
+                }
+            },
+
+            {
+                data: 'created_at',
+
+                render: function(data) {
+
+                    return new Date(data)
+                        .toLocaleDateString();
+                }
+            }
+
+        ],
+
+        pageLength: 10,
+
+        responsive: true,
+
+        searching: true,
+
+        ordering: true,
+
+        lengthMenu: [
+            [10, 25, 50, 100],
+            [10, 25, 50, 100]
+        ]
+
+    });
+
+});
+
+</script>
+
+{% endblock %}
