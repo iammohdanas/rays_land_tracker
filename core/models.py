@@ -19,7 +19,7 @@ class ApprovalBaseModel(TimeStampedModel):
 class Project(TimeStampedModel):
     name = models.CharField(max_length=255)
     code = models.CharField(max_length=100, unique=True, db_index=True)
-    project_id = models.CharField(max_length=100, null=True, blank=True)
+    project_id = models.CharField(max_length=100,  unique=True, null=True, blank=True)
     location = models.CharField(max_length=255)
     capacity_mw = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     description = models.TextField(blank=True, null=True)

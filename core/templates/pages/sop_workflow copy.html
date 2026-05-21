@@ -170,9 +170,7 @@
             <div class="col-lg-8 mx-auto text-center">
                 <span class="text-uppercase tracking-wider text-primary fw-bold font-satoshi small">Advanced Task
                     Sequencing</span>
-                <h2 class="mt-2 fw-bold text-gradient font-satoshi">
-                    {{ project.name }}
-                </h2>
+                <h2 class="mt-2 fw-bold text-gradient font-satoshi">SOP Hierarchical Workflow Manager</h2>
                 <p class="text-muted">Manage land acquisition operational pipelines. Drag entire Stage Blocks to adjust
                     master phases, or drag individual Nested Substages to cross-schedule core tasks.</p>
             </div>
@@ -241,94 +239,92 @@
 <script>
     // COMPLETE CANONICAL SCHEMA - All 11 operational layers intact.
     // Notice that stages 4 to 11 don't have static assignments initially ("") which triggers the "Send for Approval" link.
-
-    let activeWorkflowState = [];
-
-    let CANONICAL_MASTER_BLUEPRINT = [];
-
-    const PROJECT_ID = "{{ project.project_id }}";
-
-
-    async function fetchWorkflowData() {
-
-        try {
-
-            const response = await fetch(
-                `/api/workflow/${PROJECT_ID}/`
-            );
-
-            const result = await response.json();
-
-            if (result.success) {
-
-                activeWorkflowState = result.data.map(stage => {
-
-                    return {
-
-                        id: stage.id,
-
-                        stageId: stage.stage_id,
-
-                        stageCode: stage.stage_code,
-
-                        stageName: stage.title,
-
-                        stageUrl: `/projects/${PROJECT_ID}/stage/${stage.stage_id}/`,
-
-                        approved: true,
-
-                        substages: stage.substages.map(sub => {
-
-                            return {
-
-                                id: sub.id,
-
-                                substageId: sub.substage_id,
-
-                                code: sub.substage_code,
-
-                                title: sub.title,
-
-                                role: sub.assigned_role,
-
-                                duration: sub.duration,
-
-                                isCompleted: sub.is_completed,
-
-                                approvals: sub.approvals,
-
-                                approved: true
-                            };
-                        })
-                    }
-                });
-
-                CANONICAL_MASTER_BLUEPRINT =
-                    JSON.parse(
-                        JSON.stringify(activeWorkflowState)
-                    );
-
-                renderHierarchicalWorkflowEngine();
-            }
-
-        } catch (error) {
-
-            console.error(error);
-
-            dispatchNetworkTelemetryLog(
-                "ERROR",
-                "Workflow fetch failed"
-            );
+    const CANONICAL_MASTER_BLUEPRINT = [
+        {
+            stageCode: "1",
+            stageName: "Stage 1: Identification & Finalization",
+            substages: [
+                { code: "1.1", title: "Land Identification & Land Finalization", role: "Aggregator", duration: "15 Days", approvals: { "Approver 1": "Approved", "Approver 2": "Approved", "Approver 3": "", "Approver 4": "" } },
+                { code: "1.2", title: "Aggregator Final MOU", role: "Aggregator", duration: "3 Days", approvals: { "Approver 1": "Approved", "Approver 2": "Rejected", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "2",
+            stageName: "Stage 2: Technical & Legal Due Diligence",
+            substages: [
+                { code: "2.1", title: "Land Document Collection", role: "Aggregator", duration: "20 Days", approvals: { "Approver 1": "Approved", "Approver 2": "Approved", "Approver 3": "Approved", "Approver 4": "Approved" } },
+                { code: "2.2", title: "Prima Facie TSR", role: "Internal Advocate", duration: "30 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "3",
+            stageName: "Stage 3: Legal Agreements Structure",
+            substages: [
+                { code: "3.1", title: "Agreement to Lease (ATL)", role: "Aggregator", duration: "60 Days", approvals: { "Approver 1": "Approved", "Approver 2": "", "Approver 3": "", "Approver 4": "" } },
+                { code: "3.2", title: "General Power of Attorney (GPA)", role: "Aggregator", duration: "Variable", approvals: { "Approver 1": "Approved", "Approver 2": "Approved", "Approver 3": "Approved", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "4",
+            stageName: "Stage 4: On-Site Surveys",
+            substages: [
+                { code: "4.1", title: "Other Works: Stone Marking + Possession", role: "Aggregator", duration: "7 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "5",
+            stageName: "Stage 5: Statutory Clearances",
+            substages: [
+                { code: "5.1", title: "NOC Clearances (Gram Panchayat/Forest/NHAI/etc.)", role: "Aggregator", duration: "30 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "6",
+            stageName: "Stage 6: Liability Encumbrance Clearances",
+            substages: [
+                { code: "6.1", title: "Clear Mortgages/Encumbrances/Liability or Loans", role: "Aggregator", duration: "50 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "7",
+            stageName: "Stage 7: Non-Agricultural Assessment",
+            substages: [
+                { code: "7.1", title: "Apply for NA Application", role: "Aggregator", duration: "45 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } },
+                { code: "7.2", title: "NA Order Procurement", role: "Aggregator", duration: "45 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "8",
+            stageName: "Stage 8: Final Title Verification",
+            substages: [
+                { code: "8.1", title: "Final TSR Execution", role: "Client", duration: "30 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "9",
+            stageName: "Stage 9: Registration Handover",
+            substages: [
+                { code: "9.1", title: "Lease Deed Execution", role: "Client", duration: "20 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "10",
+            stageName: "Stage 10: Portfolio SPV Updating",
+            substages: [
+                { code: "10.1", title: "Updation of Encumbrance Certificate (EC) in favour of SPV", role: "Aggregator", duration: "15 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
+        },
+        {
+            stageCode: "11",
+            stageName: "Stage 11: Document Archive Delivery",
+            substages: [
+                { code: "11.1", title: "Handing Over Original Documents to Client", role: "Senior Manager P.D", duration: "7 Days", approvals: { "Approver 1": "", "Approver 2": "", "Approver 3": "", "Approver 4": "" } }
+            ]
         }
-    }
-
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        fetchWorkflowData
-    );
+    ];
 
     let expandedSubstagesRegistry = {};
+    let activeWorkflowState = JSON.parse(JSON.stringify(CANONICAL_MASTER_BLUEPRINT));
 
     activeWorkflowState.forEach(stg => {
         stg.approved = true;
@@ -400,14 +396,7 @@
                     </div>
 
                     <h5 class="fw-bold mb-0 font-satoshi">
-
-                        <a href="${stageItem.stageUrl}"
-                        class="text-decoration-none">
-
-                            ${stageItem.stageName}
-
-                        </a>
-
+                        ${stageItem.stageName}
                     </h5>
 
                     ${stageRequiresApproval

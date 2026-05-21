@@ -830,4 +830,4 @@ const calculateSavings = () => {
   `;
   document.getElementById("results").innerHTML = results;
 }
-document.addEventListener('DOMContentLoaded', calculateSavings);
+// document.addEventListener('DOMContentLoaded', calculateSavings);

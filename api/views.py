@@ -1,11 +1,11 @@
 import json
 
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from api.serializers import ProjectListSerializer
+from api.serializers import ProjectListSerializer, WorkflowStageSerializer
 from core.models import Project, WorkflowStage, WorkflowSubStage
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
@@ -170,8 +170,18 @@ def create_project_api(request):
 @api_view(["GET"])
 def project_list_api(request):
     projects = Project.objects.all()
-    serializer = ProjectListSerializer(projects,many=True)
+    serializer = ProjectListSerializer(projects, many=True)
 
-    return JsonResponse({
-        "data": serializer.data
-    })
+    return JsonResponse({"data": serializer.data})
+
+
+@api_view(["GET"])
+def workflow_data_api(request, project_id):
+    project = get_object_or_404(Project, project_id=project_id)
+    stages = (
+        WorkflowStage.objects.filter(project=project)
+        .prefetch_related("substages", "substages__approval_matrix")
+        .order_by("sequence")
+    )
+    serializer = WorkflowStageSerializer(stages, many=True)
+    return Response({"success": True, "data": serializer.data})
