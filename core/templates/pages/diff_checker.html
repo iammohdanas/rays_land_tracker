@@ -1,0 +1,522 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- HEADER -->
+
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden mb-5">
+
+        <div class="card-body p-5">
+
+            <div class="row align-items-center g-4">
+
+                <div class="col-lg-8">
+
+                    <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill mb-3">
+                        AI Document Comparison
+                    </span>
+
+                    <h1 class="display-5 fw-bold mb-3">
+                        Compare Two Documents
+                    </h1>
+
+                    <p class="text-muted fs-5 mb-0">
+                        Upload two documents and instantly identify
+                        additions, deletions, modifications and content mismatches.
+                    </p>
+
+                </div>
+
+                <div class="col-lg-4 text-center">
+
+                    <img src="https://cdn-icons-png.flaticon.com/512/6134/6134065.png"
+                        class="img-fluid"
+                        style="max-height:220px;">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MAIN -->
+
+    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+
+        <div class="card-body p-5">
+
+            <!-- TOAST -->
+
+            <div id="toastContainer"
+                class="position-fixed top-0 end-0 p-4"
+                style="z-index:9999;width:350px;">
+            </div>
+
+            <!-- FORM -->
+
+            <form id="compareForm"
+                enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="row g-4">
+
+                    <!-- DOCUMENT 1 -->
+
+                    <div class="col-lg-6">
+
+                        <div class="upload-box h-100">
+
+                            <div class="mb-3">
+
+                                <i class="bi bi-file-earmark-text display-4 text-primary"></i>
+
+                            </div>
+
+                            <h4 class="fw-bold mb-2">
+                                Original Document
+                            </h4>
+
+                            <div class="text-muted mb-4">
+                                Upload first document
+                            </div>
+
+                            <input type="file"
+                                class="form-control"
+                                name="document_1"
+                                required>
+
+                        </div>
+
+                    </div>
+
+                    <!-- DOCUMENT 2 -->
+
+                    <div class="col-lg-6">
+
+                        <div class="upload-box h-100">
+
+                            <div class="mb-3">
+
+                                <i class="bi bi-file-earmark-diff display-4 text-success"></i>
+
+                            </div>
+
+                            <h4 class="fw-bold mb-2">
+                                Compared Document
+                            </h4>
+
+                            <div class="text-muted mb-4">
+                                Upload second document
+                            </div>
+
+                            <input type="file"
+                                class="form-control"
+                                name="document_2"
+                                required>
+
+                        </div>
+
+                    </div>
+
+                    <!-- BUTTON -->
+
+                    <div class="col-12 text-center">
+
+                        <button type="submit"
+                            class="btn btn-dark btn-lg rounded-pill px-5 py-3">
+
+                            <i class="bi bi-search me-2"></i>
+
+                            Compare Documents
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+            <!-- RESULT -->
+
+            <div id="comparisonResult"
+                class="mt-5 d-none">
+
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+
+                    <div class="card-header bg-dark text-white p-4 border-0">
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <div>
+
+                                <h4 class="fw-bold mb-1">
+                                    Comparison Report
+                                </h4>
+
+                                <div class="small opacity-75">
+                                    Detailed AI-powered document analysis
+                                </div>
+
+                            </div>
+
+                            <span id="differenceBadge"
+                                class="badge bg-warning text-dark px-3 py-2 rounded-pill">
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <div class="card-body p-4">
+
+                        <!-- SUMMARY -->
+
+                        <div class="mb-5">
+
+                            <h5 class="fw-bold mb-3">
+                                Summary
+                            </h5>
+
+                            <div id="summaryBox"
+                                class="bg-light rounded-4 p-4 border">
+                            </div>
+
+                        </div>
+
+                        <!-- DIFFERENCES -->
+
+                        <div>
+
+                            <h5 class="fw-bold mb-4">
+                                Detailed Differences
+                            </h5>
+
+                            <div id="differenceList"
+                                class="d-flex flex-column gap-3">
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+
+.upload-box{
+
+    border:2px dashed #d1d5db;
+    border-radius:24px;
+    background:#fff;
+    padding:50px;
+    text-align:center;
+    transition:0.2s ease-in-out;
+
+}
+
+.upload-box:hover{
+
+    border-color:#000;
+
+}
+
+.diff-added{
+
+    border-left:5px solid #198754;
+
+}
+
+.diff-removed{
+
+    border-left:5px solid #dc3545;
+
+}
+
+.diff-modified{
+
+    border-left:5px solid #ffc107;
+
+}
+
+</style>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const form = document.getElementById(
+        "compareForm"
+    );
+
+    form.addEventListener(
+        "submit",
+        async function(e){
+
+            e.preventDefault();
+
+            const submitButton = form.querySelector(
+                "button[type='submit']"
+            );
+
+            const originalHTML = submitButton.innerHTML;
+
+            submitButton.disabled = true;
+
+            submitButton.innerHTML = `
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                Comparing...
+            `;
+
+            try{
+
+                const formData = new FormData(form);
+
+                const response = await fetch(
+
+                    "/api/compare-documents/",
+
+                    {
+                        method:"POST",
+
+                        body:formData,
+
+                        headers:{
+                            "X-CSRFToken": getCSRFToken()
+                        }
+                    }
+
+                );
+
+                const result = await response.json();
+
+                if(result.success){
+
+                    renderComparison(result);
+
+                    showToast(
+                        "Documents compared successfully.",
+                        "success"
+                    );
+
+                }else{
+
+                    showToast(
+                        result.message,
+                        "danger"
+                    );
+
+                }
+
+            }catch(error){
+
+                console.error(error);
+
+                showToast(
+                    "Something went wrong.",
+                    "danger"
+                );
+
+            }finally{
+
+                submitButton.disabled = false;
+
+                submitButton.innerHTML = originalHTML;
+
+            }
+
+        }
+    );
+
+});
+
+function renderComparison(result){
+
+    document
+        .getElementById(
+            "comparisonResult"
+        )
+        .classList
+        .remove("d-none");
+
+    document
+        .getElementById(
+            "differenceBadge"
+        )
+        .innerText =
+            `${result.total_differences} Differences`;
+
+    document
+        .getElementById(
+            "summaryBox"
+        )
+        .innerHTML = result.summary;
+
+    const differenceList =
+        document.getElementById(
+            "differenceList"
+        );
+
+    differenceList.innerHTML = "";
+
+    result.differences.forEach(diff => {
+
+        const card =
+            document.createElement("div");
+
+        let className = "diff-modified";
+
+        if(diff.type === "added"){
+
+            className = "diff-added";
+
+        }else if(
+            diff.type === "removed"
+        ){
+
+            className = "diff-removed";
+
+        }
+
+        card.className = `
+            card border-0 shadow-sm rounded-4 ${className}
+        `;
+
+        card.innerHTML = `
+
+            <div class="card-body p-4">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+
+                    <div class="fw-bold text-capitalize">
+
+                        ${diff.type}
+
+                    </div>
+
+                    <span class="badge bg-dark rounded-pill">
+
+                        Line ${diff.line}
+
+                    </span>
+
+                </div>
+
+                <div class="mb-2">
+
+                    <div class="small text-muted mb-1">
+                        Original
+                    </div>
+
+                    <div class="bg-light rounded-3 p-3">
+                        ${diff.original}
+                    </div>
+
+                </div>
+
+                <div>
+
+                    <div class="small text-muted mb-1">
+                        Updated
+                    </div>
+
+                    <div class="bg-light rounded-3 p-3">
+                        ${diff.updated}
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+        differenceList.appendChild(card);
+
+    });
+
+}
+
+function getCSRFToken(){
+
+    let cookieValue = null;
+
+    if(document.cookie){
+
+        const cookies =
+            document.cookie.split(";");
+
+        for(let cookie of cookies){
+
+            cookie = cookie.trim();
+
+            if(
+                cookie.startsWith(
+                    "csrftoken="
+                )
+            ){
+
+                cookieValue =
+                    decodeURIComponent(
+                        cookie.substring(10)
+                    );
+
+            }
+
+        }
+
+    }
+
+    return cookieValue;
+
+}
+
+function showToast(
+    message,
+    type="success"
+){
+
+    const toastContainer =
+        document.getElementById(
+            "toastContainer"
+        );
+
+    const toast =
+        document.createElement("div");
+
+    toast.className = `
+        alert alert-${type}
+        shadow-sm
+        border-0
+        rounded-3
+        mb-2
+    `;
+
+    toast.innerHTML = message;
+
+    toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+
+        toast.remove();
+
+    }, 4000);
+
+}
+
+</script>
+
+{% endblock %}

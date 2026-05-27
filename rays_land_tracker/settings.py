@@ -158,3 +158,8 @@ TWILIO_PHONE_NUMBER = os.getenv('TWILIO_PHONE_NUMBER')
 SESSION_COOKIE_AGE = 21600  # 6 hours in seconds (6 * 60 * 60 = 21600)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Keep session alive after browser close if "Remember Me" is checked
 SESSION_ENGINE = "django.contrib.sessions.backends.db"  # Use the database to store session data
+
+# settings.py
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

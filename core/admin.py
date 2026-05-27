@@ -4,6 +4,7 @@ from django.contrib import admin
 from django.contrib import admin
 from .models import (
     Project,
+    SubStageDocument,
     WorkflowStage,
     WorkflowSubStage,
     WorkflowApproval,
@@ -96,3 +97,8 @@ class WorkflowAuditLogAdmin(admin.ModelAdmin):
     )
 
     ordering = ('-created_at',)
+    
+
+@admin.register(SubStageDocument)
+class SubStageDocumentAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in SubStageDocument._meta.fields]

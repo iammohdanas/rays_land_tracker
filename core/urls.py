@@ -5,6 +5,7 @@ urlpatterns = [
     path("", views.index, name="main"),
     path("home/", views.index, name="home"),
     path("sop-workflow/", views.sop_workflow, name="sop_workflow"),
+    path("diff-checker/", views.diff_checker, name="diff_checker"),
     path("create-project/", views.create_project_page, name="create_project"),
     path("projects/", views.project_list_page, name="project_list"),
     path("projects/<str:project_id>/", views.workflow_page, name="workflow_page"),

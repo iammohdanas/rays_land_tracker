@@ -108,7 +108,7 @@
                             <!-- Navigation Dropdown: ONLY appears when user IS authenticated -->
 
                             {% if request.resolver_match.url_name == 'home' %}
-                             <li class="nav-item dropdown">
+                            <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
                                     Home
                                     <!-- <i class="bi bi-chevron-down"></i> -->
@@ -122,11 +122,11 @@
                                     <li><a class="dropdown-item" href="#contact">Escalation</a></li>
                                 </ul>
                             </li>
-                            
+
 
                             {% else %}
 
-                           <li class="nav-item">
+                            <li class="nav-item">
                                 <a class="nav-link" href="{% url 'home' %}">
                                     Home
                                 </a>
@@ -140,8 +140,21 @@
                                 </a>
 
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{% url 'create_project' %}">Create Project</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'create_project' %}">Create Project</a>
+                                    </li>
                                     <li><a class="dropdown-item" href="{% url 'project_list' %}">Project List</a></li>
+
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                    Analyzer
+                                    <!-- <i class="bi bi-chevron-down"></i> -->
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'diff_checker' %}">Discrepency Checker</a>
+                                    </li>
                                   
                                 </ul>
                             </li>

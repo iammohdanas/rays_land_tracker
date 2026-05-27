@@ -2,10 +2,29 @@
 {% load static %}
 
 {% block content %}
-<div class="container py-5">
+<style>
+    /* Bootstrap modal should stay above header/navbar */
+    .modal {
+        z-index: 1060 !important;
+    }
 
+    .modal-backdrop {
+        z-index: 1055 !important;
+    }
+
+    /* Reduce header z-index if needed */
+    header,
+    .navbar,
+    .sticky-top,
+    .fixed-top {
+        z-index: 1030 !important;
+    }
+</style>
+<div class="container py-5">
+    <div id="toastContainer" class="position-fixed top-0 end-0 p-4" style="z-index: 9999; width: 350px;"></div>
     <!-- PREMIUM STAGE HEADER -->
-    <div class="card border-0 shadow-sm bg-gradient bg-light rounded-4 mb-5 border-start border-primary border-4" style="margin-top: 4rem;">
+    <div class="card border-0 shadow-sm bg-gradient bg-light rounded-4 mb-5 border-start border-primary border-4"
+        style="margin-top: 4rem;">
         <div class="card-body p-4 p-md-5">
             <div class="row align-items-center g-3">
                 <div class="col-md">
@@ -30,6 +49,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 
@@ -41,8 +61,9 @@
 
     <!-- SUBSTAGES ITERATION -->
     {% for substage in stage.substages.all %}
-    <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden border-top border-3 {% if substage.is_completed %}border-success{% else %}border-warning{% endif %}">
-        
+    <div
+        class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden border-top border-3 {% if substage.is_completed %}border-success{% else %}border-warning{% endif %}">
+
         <!-- CARD HEADER -->
         <div class="card-header bg-white border-0 pt-4 px-4 pb-2">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
@@ -56,54 +77,164 @@
                 </div>
                 <div>
                     {% if substage.is_completed %}
-                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill fs-7 fw-semibold">
-                            ● Completed
-                        </span>
+                    <span
+                        class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill fs-7 fw-semibold">
+                        ● Completed
+                    </span>
                     {% else %}
-                        <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-2 rounded-pill fs-7 fw-semibold">
-                            ○ Pending
-                        </span>
+                    <span
+                        class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-3 py-2 rounded-pill fs-7 fw-semibold">
+                        ○ Pending
+                    </span>
                     {% endif %}
                 </div>
             </div>
         </div>
 
         <div class="card-body p-4">
-            
+
             <!-- INFO MATRIX (4-COLUMN GRID) -->
             <div class="row g-3 mb-4">
+
+                <!-- ASSIGNED ROLE -->
+
                 <div class="col-sm-6 col-md-3">
+
                     <div class="bg-light rounded-3 p-3 h-100 border border-light-subtle">
-                        <div class="text-muted small fw-medium mb-1">Assigned Role</div>
+
+                        <div class="text-muted small fw-medium mb-1">
+                            Assigned Role
+                        </div>
+
                         <div class="fw-bold text-dark">
                             {{ substage.assigned_role|default:"—" }}
                         </div>
+
                     </div>
+
                 </div>
+
+
+                <!-- DURATION -->
+
                 <div class="col-sm-6 col-md-3">
+
                     <div class="bg-light rounded-3 p-3 h-100 border border-light-subtle">
-                        <div class="text-muted small fw-medium mb-1">Duration</div>
+
+                        <div class="text-muted small fw-medium mb-1">
+                            Planned Duration
+                        </div>
+
                         <div class="fw-bold text-dark">
                             {{ substage.duration|default:"—" }}
                         </div>
+
                     </div>
+
                 </div>
+
+
+                <!-- WORKFLOW STATUS -->
+
                 <div class="col-sm-6 col-md-3">
+
                     <div class="bg-light rounded-3 p-3 h-100 border border-light-subtle">
-                        <div class="text-muted small fw-medium mb-1">Created At</div>
-                        <div class="fw-semibold text-secondary small">
-                            {{ substage.created_at }}
+
+                        <div class="text-muted small fw-medium mb-2">
+                            Workflow Timeline
                         </div>
+
+                        {% if not substage.start_date %}
+
+                        <div
+                            class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-3 py-2">
+                            To Be Started
+                        </div>
+
+                        {% elif substage.start_date and not substage.end_date %}
+
+                        <div class="mb-2">
+
+                            <div class="small text-muted">
+                                Started On
+                            </div>
+
+                            <div class="fw-semibold text-dark">
+                                {{ substage.start_date|date:"d M Y h:i A" }}
+                            </div>
+
+                        </div>
+
+                        <div
+                            class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill px-3 py-2">
+                            In Progress
+                        </div>
+
+                        {% else %}
+
+                        <div class="mb-2">
+
+                            <div class="small text-muted">
+                                Started On
+                            </div>
+
+                            <div class="fw-semibold text-dark">
+                                {{ substage.start_date|date:"d M Y h:i A" }}
+                            </div>
+
+                        </div>
+
+                        <div class="mb-2">
+
+                            <div class="small text-muted">
+                                Completed On
+                            </div>
+
+                            <div class="fw-semibold text-dark">
+                                {{ substage.end_date|date:"d M Y h:i A" }}
+                            </div>
+
+                        </div>
+
+                        <div class="pt-2 border-top">
+
+                            <div class="small text-muted">
+                                Time Taken
+                            </div>
+
+                            <div class="fw-bold text-success">
+
+                                {{ substage.end_date|timeuntil:substage.start_date }}
+
+                            </div>
+
+                        </div>
+
+                        {% endif %}
+
                     </div>
+
                 </div>
+
+
+                <!-- LAST UPDATED -->
+
                 <div class="col-sm-6 col-md-3">
+
                     <div class="bg-light rounded-3 p-3 h-100 border border-light-subtle">
-                        <div class="text-muted small fw-medium mb-1">Last Updated</div>
-                        <div class="fw-semibold text-secondary small">
-                            {{ substage.updated_at }}
+
+                        <div class="text-muted small fw-medium mb-1">
+                            Last Updated
                         </div>
+
+                        <div class="fw-semibold text-secondary small">
+                            {{ substage.updated_at|date:"d M Y h:i A" }}
+                        </div>
+
                     </div>
+
                 </div>
+
             </div>
 
             <!-- TWO COLUMN SPLIT FOR REMARKS & METADATA -->
@@ -115,98 +246,369 @@
                         {{ substage.remarks|default:"No remarks recorded for this step." }}
                     </div>
                 </div>
-                
+
                 <!-- METADATA -->
                 <div class="col-lg-6">
                     <h6 class="fw-bold text-uppercase tracking-wider text-secondary small mb-2">Technical Metadata</h6>
-                    <div class="p-3 bg-dark text-light rounded-3 font-monospace small h-100 overflow-auto" style="max-height: 150px;">
-                        <pre class="mb-0 text-success-subtle" style="white-space: pre-wrap;">{{ substage.metadata }}</pre>
+                    <div class="p-3 bg-dark text-light rounded-3 font-monospace small h-100 overflow-auto"
+                        style="max-height: 150px;">
+                        <pre class="mb-0 text-success-subtle"
+                            style="white-space: pre-wrap;">{{ substage.metadata }}</pre>
                     </div>
                 </div>
             </div>
+            <!-- SUBSTAGE DOCUMENT MANAGEMENT -->
 
+            {% include 'components/substage_documents.html' %}
             <!-- APPROVAL MATRIX SECTION -->
-            <div class="border-top pt-4">
-                <h6 class="fw-bold text-uppercase tracking-wider text-secondary small mb-3">
-                    Approval Track Progress
-                </h6>
-                <div class="row g-3">
-                    {% for approval in substage.approval_matrix.all %}
-                    <div class="col-md-6 col-xl-3">
-                        <div class="card border border-light-subtle rounded-3 h-100 shadow-sm-hover transition-all">
-                            <div class="card-body p-3 d-flex flex-column justify-content-between">
-                                <div>
-                                    <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <div class="fw-bold text-dark text-truncate" style="max-width: 70%;">
-                                            {{ approval.approver_name }}
-                                        </div>
-                                        <span class="badge bg-secondary-subtle text-secondary font-monospace small">
-                                            Lvl {{ approval.approval_level }}
-                                        </span>
-                                    </div>
-                                    
-                                    <div class="small text-muted mb-2 text-wrap-pretty">
-                                        <span class="text-dark fw-medium">Remarks:</span> {{ approval.remarks|default:"—" }}
-                                    </div>
-                                </div>
-
-                                <div class="mt-2 pt-2 border-top d-flex justify-content-between align-items-center flex-wrap gap-1">
-                                    <div>
-                                        {% if approval.status == 'approved' %}
-                                            <span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1 rounded-2 small">
-                                                Approved
-                                            </span>
-                                        {% elif approval.status == 'pending' %}
-                                            <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle px-2 py-1 rounded-2 small">
-                                                Pending
-                                            </span>
-                                        {% elif approval.status == 'rejected' %}
-                                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1 rounded-2 small">
-                                                Rejected
-                                            </span>
-                                        {% else %}
-                                            <span class="badge bg-light text-muted border px-2 py-1 rounded-2 small">
-                                                Not Sent
-                                            </span>
-                                        {% endif %}
-                                    </div>
-                                    
-                                    {% if approval.approved_at %}
-                                    <div class="text-muted text-end font-monospace" style="font-size: 0.75rem;">
-                                        {{ approval.approved_at|date:"Y-m-d H:i" }}
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% empty %}
-                    <div class="col-12">
-                        <div class="text-muted small py-2 italic">No approval requirements defined for this substage.</div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
+            {% include 'components/substage_approval_matrix.html' %}
 
         </div>
     </div>
+    <br><br>
+    <hr style="height: 3px; border: none; background-color: #000000; border-radius: 3px;"> <br><br>
     {% endfor %}
+    {% for substage in stage.substages.all %}
 
+    <!-- DOCUMENT UPLOAD MODAL -->
+
+    <div class="modal fade" id="uploadDocumentModal{{ substage.id }}" tabindex="-1">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+
+            <div class="modal-content border-0 rounded-4">
+
+                <div class="modal-header border-0 pb-0">
+
+                    <div>
+
+                        <h4 class="fw-bold mb-1">
+                            Upload Substage Document
+                        </h4>
+
+                        <div class="text-muted small">
+                            {{ substage.title }}
+                        </div>
+
+                    </div>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                </div>
+
+                <form class="upload-document-form" enctype="multipart/form-data"
+                    data-substage-id="{{ substage.substage_id }}">
+
+                    {% csrf_token %}
+
+                    <div class="modal-body">
+
+                        <div class="row g-4">
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    Document Title
+                                </label>
+
+                                <input type="text" class="form-control" name="title" required>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    Document Type
+                                </label>
+
+                                <select class="form-select" name="document_type">
+
+                                    <option value="">
+                                        Select Document Type
+                                    </option>
+
+                                    <option value="Agreement">
+                                        Agreement
+                                    </option>
+
+                                    <option value="Survey">
+                                        Survey
+                                    </option>
+
+                                    <option value="NOC">
+                                        NOC
+                                    </option>
+
+                                    <option value="Legal">
+                                        Legal
+                                    </option>
+
+                                    <option value="Ownership">
+                                        Ownership
+                                    </option>
+
+                                    <option value="Technical">
+                                        Technical
+                                    </option>
+
+                                    <option value="Other">
+                                        Other
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+                            <div class="col-12">
+
+                                <label class="form-label fw-semibold">
+                                    Description
+                                </label>
+
+                                <textarea class="form-control" rows="3" name="description"></textarea>
+
+                            </div>
+
+                            <div class="col-12">
+
+                                <label class="form-label fw-semibold">
+                                    Remarks
+                                </label>
+
+                                <textarea class="form-control" rows="3" name="remarks"></textarea>
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    Version
+                                </label>
+
+                                <input type="number" class="form-control" name="version" value="1">
+
+                            </div>
+
+                            <div class="col-md-6">
+
+                                <label class="form-label fw-semibold">
+                                    Tags
+                                </label>
+
+                                <input type="text" class="form-control" name="tags" placeholder="legal,noc,survey">
+
+                            </div>
+
+                            <div class="col-12">
+
+                                <label class="form-label fw-semibold">
+                                    Upload File
+                                </label>
+
+                                <input type="file" class="form-control" name="document" required>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer border-0">
+
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+
+                        <button type="submit" class="btn btn-dark px-4">
+                            Upload Document
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
 </div>
 
 <!-- CSS Utility Classes (Add to your global style block if needed) -->
 <style>
-  
-    .fs-7 { font-size: 0.8rem; }
-    .tracking-wider { letter-spacing: 0.05em; }
-    .fw-extrabold { font-weight: 800; }
-    .text-wrap-pretty { text-wrap: pretty; }
+    .fs-7 {
+        font-size: 0.8rem;
+    }
+
+    .tracking-wider {
+        letter-spacing: 0.05em;
+    }
+
+    .fw-extrabold {
+        font-weight: 800;
+    }
+
+    .text-wrap-pretty {
+        text-wrap: pretty;
+    }
+
     .shadow-sm-hover:hover {
         transform: translateY(-2px);
-        box-shadow: 0 .5rem 1rem rgba(0,0,0,.08)!important;
+        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .08) !important;
     }
+
     .transition-all {
         transition: all 0.2s ease-in-out;
     }
 </style>
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const forms = document.querySelectorAll(".upload-document-form");
+
+        forms.forEach(form => {
+
+            form.addEventListener("submit", async function (e) {
+
+                e.preventDefault();
+
+                const submitButton = form.querySelector("button[type='submit']");
+
+                const originalButtonText = submitButton.innerHTML;
+
+                submitButton.disabled = true;
+
+                submitButton.innerHTML = `
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                Uploading...
+            `;
+
+                try {
+
+                    const substageId = form.dataset.substageId;
+
+                    const formData = new FormData(form);
+
+                    const response = await fetch(
+                        `/api/substages/${substageId}/upload-document/`,
+                        {
+                            method: "POST",
+                            body: formData,
+                            headers: {
+                                "X-CSRFToken": getCSRFToken()
+                            }
+                        }
+                    );
+
+                    const result = await response.json();
+
+                    if (result.success) {
+
+                        showToast(
+                            "Document uploaded successfully.",
+                            "success"
+                        );
+
+                        const modalElement = form.closest(".modal");
+
+                        const modal =
+                            bootstrap.Modal.getInstance(modalElement);
+
+                        modal.hide();
+
+                        form.reset();
+
+                        // Reload page to show uploaded document
+                        window.location.reload();
+
+                    } else {
+
+                        showToast(
+                            result.message || "Upload failed.",
+                            "danger"
+                        );
+
+                    }
+
+                } catch (error) {
+
+                    console.error(error);
+
+                    showToast(
+                        "Something went wrong while uploading document.",
+                        "danger"
+                    );
+
+                } finally {
+
+                    submitButton.disabled = false;
+
+                    submitButton.innerHTML = originalButtonText;
+
+                }
+
+            });
+
+        });
+
+    });
+
+
+    function getCSRFToken() {
+
+        let cookieValue = null;
+
+        if (document.cookie && document.cookie !== "") {
+
+            const cookies = document.cookie.split(";");
+
+            for (let i = 0; i < cookies.length; i++) {
+
+                const cookie = cookies[i].trim();
+
+                if (cookie.substring(0, 10) === "csrftoken=") {
+
+                    cookieValue = decodeURIComponent(
+                        cookie.substring(10)
+                    );
+
+                    break;
+                }
+            }
+        }
+
+        return cookieValue;
+    }
+
+
+    function showToast(message, type = "success") {
+
+        const toastContainer = document.getElementById("toastContainer");
+
+        const toast = document.createElement("div");
+
+        toast.className = `
+        alert alert-${type}
+        shadow-sm
+        border-0
+        rounded-3
+        mb-2
+    `;
+
+        toast.innerHTML = message;
+
+        toastContainer.appendChild(toast);
+
+        setTimeout(() => {
+
+            toast.remove();
+
+        }, 4000);
+
+    }
+
+</script>
 {% endblock %}

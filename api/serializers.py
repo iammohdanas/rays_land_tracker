@@ -1,5 +1,13 @@
+import os
+
 from rest_framework import serializers
-from core.models import Project, WorkflowStage, WorkflowSubStage, WorkflowApproval
+from core.models import (
+    Project,
+    SubStageDocument,
+    WorkflowStage,
+    WorkflowSubStage,
+    WorkflowApproval,
+)
 
 
 class ProjectListSerializer(serializers.ModelSerializer):
@@ -29,9 +37,50 @@ class WorkflowApprovalSerializer(serializers.ModelSerializer):
         fields = ["id", "approver_name", "approval_level", "status", "remarks"]
 
 
+class SubStageDocumentSerializer(serializers.ModelSerializer):
+
+    document_name = serializers.SerializerMethodField()
+    document_url = serializers.SerializerMethodField()
+
+    class Meta:
+
+        model = SubStageDocument
+
+        fields = [
+            "id",
+            "title",
+            "description",
+            "remarks",
+            "document_type",
+            "document_name",
+            "document_url",
+            "uploaded_by",
+            "version",
+            "verification_status",
+            "ai_verification_score",
+            "ai_summary",
+            "tags",
+            "created_at",
+        ]
+
+    def get_document_name(self, obj):
+
+        return os.path.basename(obj.document.name)
+
+    def get_document_url(self, obj):
+
+        request = self.context.get("request")
+
+        if request:
+            return request.build_absolute_uri(obj.document.url)
+
+        return obj.document.url
+
+
 class WorkflowSubStageSerializer(serializers.ModelSerializer):
 
     approvals = serializers.SerializerMethodField()
+    documents = SubStageDocumentSerializer(many=True, read_only=True)
 
     class Meta:
 
@@ -50,6 +99,7 @@ class WorkflowSubStageSerializer(serializers.ModelSerializer):
             "metadata",
             "created_at",
             "updated_at",
+            "documents",
             "approvals",
         ]
 
@@ -72,10 +122,14 @@ class WorkflowSubStageSerializer(serializers.ModelSerializer):
 
 
 class WorkflowStageSerializer(serializers.ModelSerializer):
-
     substages = WorkflowSubStageSerializer(many=True)
-
     class Meta:
         model = WorkflowStage
-
-        fields = ["id", "stage_id", "stage_code", "title", "sequence", "substages"]
+        fields = [
+            "id",
+            "stage_id",
+            "stage_code",
+            "title",
+            "sequence",
+            "substages",
+        ]

@@ -46,3 +46,9 @@ def stage_detail_page(request, project_id, stage_id):
     return render(
         request, "pages/stage_detail.html", {"project": project, "stage": stage}
     )
+
+@login_required
+@admin_required
+@role_required(['admin', 'manager'])
+def diff_checker(request):
+    return render(request, "pages/diff_checker.html")
